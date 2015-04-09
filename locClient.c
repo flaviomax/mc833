@@ -138,23 +138,29 @@ char* select_query(char * option){
  * de bytes lidos na mensagem.
  * A funcao retorna o resultado da query com header de sucesso.*/
 char* queryToServer (int sockfd, float *t1, float *t2, char* query, int *bytes_read){
-	int len, bytes_sent;
+	int len, bytes_sent, total_read = 0;
 	len = strlen(query);
+	*bytes_read = 0;
     static char buf[MAXBUFLEN];
+    static char result[MAXBUFLEN];
+    result[0] = 0;
 	*t1 = tempo (); // tempo antes de enviar a query
 	if ((bytes_sent = send(sockfd, query, len, 0)) == -1)
 		perror("send");
     // printf("bytes_sent: %d, len: %d\n", bytes_sent, len);
-    if ((*bytes_read = recv(sockfd, buf, MAXBUFLEN-1, 0)) == -1){
-		perror("recv");
+    while ((*bytes_read = recv(sockfd, buf, MAXBUFLEN-1, 0)) > 0){
+		buf[*bytes_read] = 0;
+		strcat(result, buf);
+		total_read += *bytes_read;
 	}
-	printf("bytes_read: %d\n", *bytes_read);
+	if (*bytes_read < 0)
+		perror ("recv");
+	printf("total_read: %d\n", total_read);
 
 	*t2 = tempo(); // tempo apos receber a resposta do servidor
-	buf[*bytes_read] = 0;
-	printf("\n\nbuf: %s\n\n", buf);
+	//printf("\n\nresult: %s\n\n", result);
 		
-	return buf;
+	return result;
 }
 
 
@@ -303,18 +309,8 @@ int main (int argc, char** argv) {
 		close (sockfd);
 		t3 = tempo();
 		
-		/* O tempo de execucao do servidor esta concatenado ao fim da
-		 * mensagem em buf.
-		 * Aqui sao realizadas as operacoes para retirar o tempo de execucao
-		 * do corpo da mensagem. */
-		char tQuery_c[FLOAT_LENGTH], *tQueryAux;
-		tQueryAux = &buf[bytes_read-FLOAT_LENGTH+1];
-		strcpy(tQuery_c, tQueryAux);
-		buf[bytes_read-FLOAT_LENGTH+1] = 0;
-		tQuery = atof(tQuery_c); // aqui o float tQuery guarda o tempo de execucao do servidor
-		
 		if (modo == 1)
-			printf("%s", buf); // imprime o retorno do servidor
+			printf("%s\n", buf); // imprime o retorno do servidor
 		
 		/* Aqui o tempo esta estrutrado do seguinte modo:
 		 * tQuery: o tempo de execucao do servidor

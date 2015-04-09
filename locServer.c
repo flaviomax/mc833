@@ -122,8 +122,7 @@ void deal_with_query (int connfd){
 		
 	}
 	t = tempo();
-	snprintf(qryTime, FLOAT_LENGTH, "%f", t);
-	strcat(qryRes, qryTime); //o tempo de execução das queries é concatenado ao final da mensagem.
+	printf("tempo de operacao: %f\n", t);
 	int bytes_sent, len = strlen(qryRes);
 	if ((bytes_sent = send(connfd, qryRes, len, 0)) == -1)
 		perror("send");
