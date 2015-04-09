@@ -122,6 +122,10 @@ void deal_with_query (int connfd){
 		
 	}
 	t = tempo();
+	FILE *fp;
+	fp = fopen("tempo_serv.txt", "a");
+	fprintf(fp, "%f", t);
+	fclose(fp);
 	printf("tempo de operacao: %f\n", t);
 	int bytes_sent, len = strlen(qryRes);
 	if ((bytes_sent = send(connfd, qryRes, len, 0)) == -1)
