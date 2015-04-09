@@ -313,7 +313,6 @@ int main (int argc, char** argv) {
 			printf("%s\n", buf); // imprime o retorno do servidor
 		
 		/* Aqui o tempo esta estrutrado do seguinte modo:
-		 * tQuery: o tempo de execucao do servidor
 		 * t1: o intervalo de tempo entre o inicio da contagem do relogio
 		 * e imediatamente antes do envio do primeiro "send" ao servidor.
 		 * t2: o intervalo entre t1 e imediatamente apos a resposta do servidor.
@@ -321,16 +320,16 @@ int main (int argc, char** argv) {
 		 * */
 		 
 		/* Dessa forma, t1+t2+t3 eh o tempo total, desde antes do connect() ateh depois do close().
-		 * t2-tQuery guarda o tempo de transmissao */
+		 * t2 guarda o tempo de entre send e recv */
 		
 		if (modo == 1)
-			printf("\ntempo total de conversa: %f\ntempo de transmissao: %f\n", t1+t2+t3, t2-tQuery);
+			printf("\ntempo total de conversa: %f\ntempo entre send e recv: %f\n", t1+t2+t3, t2);
 		else{
-			fprintf(fp, "%f %f %d\n", t1+t2+t3, t2-tQuery, strcmp(buf, correct_answer));
+			fprintf(fp, "%f %f %d\n", t1+t2+t3, t2, strcmp(buf, correct_answer));
 		}
 			
 		/* Essa saida para arquivo eh da seguinte forma: a primeira coluna da o tempo total, desde o connect()
-		 * ateh o close(). A segunda da a estimativa de tempo de transmissao de dados. A terceira
+		 * ateh o close(). A segunda da o tempo do send() ao recv(). A terceira
 		 * da a corretude da resposta recebida pelo servidor: se eh 0, a resposta esta correta.
 		 * Qualquer outro valor significa resposta errada (algo da mensagem se alterou durante a transmissao) */
 	}
