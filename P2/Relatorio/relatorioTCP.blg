@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: relatorioTCP.aux
+The style file: unsrt.bst
+Database file #1: relatorioTCP.bib
+Warning--entry type for "IMDbsite" isn't style-file defined
+--line 21 of file relatorioTCP.bib
+Warning--empty journal in postel1981transmission
+Warning--empty year in hall19beej
+You've used 5 entries,
+            1791 wiz_defined-function locations,
+            466 strings with 3978 characters,
+and the built_in function-call counts, 671 in all, are:
+= -- 51
+> -- 20
+< -- 0
++ -- 10
+- -- 5
+* -- 17
+:= -- 119
+add.period$ -- 14
+call.type$ -- 5
+change.case$ -- 4
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 39
+empty$ -- 80
+format.name$ -- 5
+if$ -- 146
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 5
+newline$ -- 27
+num.names$ -- 5
+pop$ -- 26
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 15
+stack$ -- 0
+substring$ -- 0
+swap$ -- 4
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 2
+while$ -- 5
+width$ -- 6
+write$ -- 48
+(There were 3 warnings)
