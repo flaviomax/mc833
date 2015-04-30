@@ -1,4 +1,4 @@
-B#include <stdio.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -40,14 +40,16 @@ void finish_with_error(MYSQL *con){
 	mysql_close(con);      
 }
 
+/** get sockaddr, IPv4 or IPv6: */
+void *get_in_addr(struct sockaddr *sa)
+{
+    return &(((struct sockaddr_in*)sa)->sin_addr);
+}
+
 /** Recebe a a mensagem e executa a query */
-void deal_with_query (int connfd){
-	
-	char buf[MAXBUFLEN], qryRes[MAX_QUERY_RESULT], qryTime[FLOAT_LENGTH];
-	qryRes[0] = 0;
-	float t;
-	int bytes_read;
+void deal_with_query (int sockfd){
 	MYSQL *con = mysql_init(NULL); // conector mysql
+	
 	if (con == NULL) 
 	{
 		fprintf(stderr, "%s\n", mysql_error(con));
@@ -60,117 +62,131 @@ void deal_with_query (int connfd){
 	}
 	/* Neste ponto o conector sql esta pronto e aguardando queries */
 	
-	/* Iniciam-se aqui operacoes epecificas de redes */
-	if ((bytes_read = recv(connfd, buf, MAXBUFLEN-1, 0)) == -1){
-		perror("recv");
-	}
-	tempo();
-	int qError = 0;
-	buf[bytes_read] = 0;
-	if (mysql_query(con, buf)) { // realizar query
-		finish_with_error(con);
-		strcat(qryRes, "Server: Erro na query.\n");
-		qError = 1;
-	}
-	else{
-		strcat(qryRes, "Operacao realizada com sucesso!\n\n");
-	}
 	
-	if (!qError){
-		char operation[7];
-		strncpy(operation, buf, 6);
-		operation[6] = 0;
 	
-		if (strcmp(operation, "SELECT") == 0){ // se a query foi um SELECT, deve responder com o resultado
-			MYSQL_RES *result = mysql_store_result(con);
-			if (result == NULL) 
-			{
-				finish_with_error(con);
-			}
+	/* Iniciam-se aqui operacoes especificas de redes */
+	while( 1 ){
+		char buf[MAXBUFLEN], qryRes[MAX_QUERY_RESULT];
+		qryRes[0] = 0;
+		int numbytes;
+		struct sockaddr_storage their_addr;
+		socklen_t addr_len;
+		float t;
 		
-			int num_fields = mysql_num_fields(result);
-
-			MYSQL_ROW row;
-			MYSQL_FIELD *field;
-			
-			while ((row = mysql_fetch_row(result))) 
-			{ 
-				for(int i = 0; i < num_fields; i++) 
-				{ 
-					if (i == 0) 
-					{              
-						 while(field = mysql_fetch_field(result)) 
-						 {
-							strcat(qryRes, field->name);
-							strcat(qryRes, " - ");
-						 }
-						 strcat(qryRes, "\n");           
-					  }
-					  strcat(qryRes, row[i] ? row[i] : "NULL");
-					  strcat(qryRes, " - "); 
-				  } 
-			  }
-		  
-			strcat(qryRes, "\n"); // neste ponto qryRes ja guarda o resultado da query SELECT
-			mysql_free_result(result);
-			mysql_close(con);
+		addr_len = sizeof their_addr;
+		if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0,
+			(struct sockaddr *)&their_addr, &addr_len)) == -1) {
+			perror("recvfrom");
+			exit(1);
+		}
+		printf("Passou do recv\n");
+		tempo();
+		int qError = 0;
+		buf[numbytes] = 0;
+		if (mysql_query(con, buf)) { // realizar query
+			finish_with_error(con);
+			strcat(qryRes, "Server: Erro na query.\n");
+			qError = 1;
+		}
+		else{
+			strcat(qryRes, "Operacao realizada com sucesso!\n\n");
 		}
 		
+		if (!qError){
+			char operation[7];
+			strncpy(operation, buf, 6);
+			operation[6] = 0;
+		
+			if (strcmp(operation, "SELECT") == 0){ // se a query foi um SELECT, deve responder com o resultado
+				MYSQL_RES *result = mysql_store_result(con);
+				if (result == NULL) 
+				{
+					finish_with_error(con);
+				}
+			
+				int num_fields = mysql_num_fields(result);
+
+				MYSQL_ROW row;
+				MYSQL_FIELD *field;
+				
+				while ((row = mysql_fetch_row(result))) 
+				{ 
+					for(int i = 0; i < num_fields; i++) 
+					{ 
+						if (i == 0) 
+						{              
+							 while(field = mysql_fetch_field(result)) 
+							 {
+								strcat(qryRes, field->name);
+								strcat(qryRes, " - ");
+							 }
+							 strcat(qryRes, "\n");           
+						  }
+						  strcat(qryRes, row[i] ? row[i] : "NULL");
+						  strcat(qryRes, " - "); 
+					  } 
+				  }
+			  
+				strcat(qryRes, "\n"); // neste ponto qryRes ja guarda o resultado da query SELECT
+				mysql_free_result(result);
+			}
+			
+		}
+		t = tempo();
+		FILE *fp;
+		fp = fopen("tempo_serv.txt", "a");
+		fprintf(fp, "%f\n", t);
+		fclose(fp);
+		printf("tempo de operacao: %f\n", t);
+		int bytes_sent, len = strlen(qryRes);
+		if ((bytes_sent = sendto(sockfd, qryRes, len, 0, (const struct sockaddr *)&their_addr, addr_len)) == -1)
+			perror("send");
+		printf("bytes_sent = %d, len = %d\n", bytes_sent, len);
 	}
-	t = tempo();
-	FILE *fp;
-	fp = fopen("tempo_serv.txt", "a");
-	fprintf(fp, "%f\n", t);
-	fclose(fp);
-	printf("tempo de operacao: %f\n", t);
-	int bytes_sent, len = strlen(qryRes);
-	if ((bytes_sent = send(connfd, qryRes, len, 0)) == -1)
-		perror("send");
-	printf("bytes_sent = %d, len = %d\n", bytes_sent, len);
-	//printf("bytes_sent: %d, len: %d\n", bytes_sent, len);
 	
 }
 
 int main(int argc, char **argv) 
 {
-	int listenfd, connfd;
-	struct addrinfo hints, *res;
-	struct sockaddr_storage their_addr;
-    socklen_t addr_size;
+	int sockfd, rv;
+	struct addrinfo hints, *servinfo, *p;
 	
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_INET;
-	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE;
 	
-	getaddrinfo(NULL, SERV_PORT, &hints, &res);
-	if ((listenfd = socket (res->ai_family, res->ai_socktype, res->ai_protocol)) < 0 ){
-		perror("listener : creation");
-		exit(1);
-	}
-	if (bind(listenfd, res->ai_addr, res->ai_addrlen) < 0){
-		perror("listener : bind");
-		exit(2);
-	}
-	if (listen(listenfd, BACKLOG) < 0){
-		perror("listener : listen");
-		exit(3);
-	}
+	if ((rv = getaddrinfo(NULL, SERV_PORT, &hints, &servinfo)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        return 1;
+    }
+    
+    // loop through all the results and bind to the first we can
+    for(p = servinfo; p != NULL; p = p->ai_next) {
+        if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+            perror("listener: socket");
+            continue;
+        }
+
+        if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+            close(sockfd);
+            perror("listener: bind");
+            continue;
+        }
+
+        break;
+    }
+    
+    if (p == NULL) {
+        fprintf(stderr, "listener: failed to bind socket\n");
+        return 2;
+    }
+
+    freeaddrinfo(servinfo);
 	
-	/* Servidor esta live e aguardando conexoes */
+	/* Servidor esta live e aguardando mensagens */
+	printf("Aguardando mensagens!\n");
 	
-	for ( ; ; ){
-		addr_size = sizeof their_addr;
-		if ((connfd = accept(listenfd, (struct sockaddr *)&their_addr, &addr_size)) < 0){
-			perror("accept");
-			exit(4);
-		}
-		if ((childpid = fork()) == 0){ /* child */
-			close(listenfd);
-			printf ("Conectou!\n");
-			deal_with_query(connfd);
-			exit(0);
-		}
-		close (connfd);
-	}
+	deal_with_query(sockfd);
+	
 } 
