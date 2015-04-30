@@ -120,7 +120,7 @@ O sistema construído consiste em uma simples montagem de cliente-servidor, com 
     
     Para sintetizar o problema da melhor forma possível, criamos no nosso banco de dados uma tabela “Locadora” que armazena os seguintes atributos sobre os filmes que possui: título, ano de lançamento, gênero, duração, sinopse, diretor, ator principal, ator coadjuvante principal, exemplares e um id único para cada filme. 
     
-Os acessos do cliente ou do administrador do locadora ao servidor são com pedidos de informação ou escrita de dados de cada filme, sendo eles da seguinte forma:
+Os acessos do cliente ou do administrador da locadora ao servidor são com pedidos de informação ou escrita de dados de cada filme, sendo eles da seguinte forma:
 
 \begin {myenumerate}
 \item Listar todos os títulos dos filmes e o ano de lançamento;
@@ -148,7 +148,7 @@ Em um sistema real de cliente-servidor os dados são em sua maioria armazenados 
     
     No acesso ao banco de dados, os clientes podem apenas acessar a informação, enquanto o cliente administrador da locadora pode, além do acesso, alterar a quantidade de exemplares em estoque. Para garantir esse privilégio de acesso, é necessário uma senha para entrar no modo administrador, a qual é processada pelo programa e só após confirmada o acesso diferenciado ao banco pode ocorrer.
     
-Com o objetivo de fazer um sistema robusto, que garante a confiabilidade do mesmo, optamos por utilizar o mesmo banco de dados do servidor no lado do Cliente, possibilitando assim uma conferência dos dados retornados pelas consultas. Apesar de ser uma manobra simulada, nos permite confirmar a confiabilidade do protocolo TCP, que para todos os nossos exemplos retornou as consultas em ordem, da forma que foram enviadas pelo servidor. E portanto, essa manobra também nos permitirá dizer se o mesmo ocorre quando utilizamos um protocolo sem confiabilidade, que é o caso do UDP.
+Com o objetivo de fazer um sistema robusto, que garante a confiabilidade do mesmo, optamos por utilizar uma cópia do banco de dados do servidor no lado do Cliente, possibilitando assim uma conferência dos dados retornados pelas consultas. Apesar de ser uma manobra simulada, nos permite confirmar a confiabilidade do protocolo TCP, que para todos os nossos exemplos retornou as consultas em ordem, da forma que foram enviadas pelo servidor. E portanto, essa manobra também nos permitirá dizer se o mesmo ocorre quando utilizamos um protocolo sem confiabilidade, que é o caso do UDP.
 
 \section{Detalhes de Implementação}
 
@@ -207,7 +207,7 @@ Operação & Tempo Médio Total (\SI{}{\milli\second}) & Intervalo de Confiança
 \label{fig:total}
 \end{figure}
 
-Os resultados que obtivemos para o tempo total de conexão dependem bastante das consultas ao banco de dados e do tamanho das mensagens. Esses mensagens nas operações pequenas, como já especificado, podem ser totalmente enviadas em apenas um pacote, enquanto nas operações grandes, vários pacotes são necessários para o envio completo das mensagens. Nas operações de escrita, apesar de só um pacote ser necessário para o envio da mensagem, a consulta ao banco de dados para alteração requer um tempo de conexão bem maior do que as consultas de informação. É interessante notar que o desvio da operação de escrita também é consideravelmente maior do que o das outras operações; acreditamos porém que essa variação é causada pelo atraso do banco de dados, e não da rede.
+Os resultados que obtivemos para o tempo total de conexão dependem bastante das consultas ao banco de dados e do tamanho das mensagens. Esses mensagens nas operações pequenas, como já especificado, podem ser totalmente enviadas em apenas um pacote, enquanto nas operações grandes, vários pacotes são necessários para o envio completo das mensagens. Nas operações de escrita, apesar de só um pacote ser necessário para o envio da mensagem, a consulta ao banco de dados para alteração requer um tempo de conexão bem maior do que as consultas de informação. É interessante notar que o desvio da operação de escrita também é consideravelmente maior do que o das outras operações; acreditamos porém que essa variação é causada pelo atraso do banco de dados, e não apenas da rede.
 
 Com isso em mente, os resultados foram como esperado. As operações pequenas estão todas na mesma faixa e a operação grande está apenas um pouco acima destas, visto que a única diferença entre essas duas categorias é a quantidade de pacotes recebidos, que causou um pequeno aumento no tempo medido. Já a operação de escrita apresenta uma grande diferença em relação as demais; o acesso ao banco para alteração de valores gera um {\it overhead} muito grande nesse medida, que acaba representando bem mais o tempo de alteração do banco de dados do que o tempo de conexão com o servidor.
 

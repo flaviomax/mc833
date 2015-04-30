@@ -11,7 +11,7 @@ Requisitos:
 
 COMO COMPILAR:
 
-gcc locServer.c -o locServer  \`mysql_config --cflags --libs\` -std=gnu99
+gcc locServer.c -o locServer  `mysql_config --cflags --libs` -std=gnu99
 
-gcc locClient.c -o locClient  \`mysql_config --cflags --libs\` -std=gnu99
+gcc locClient.c -o locClient  `mysql_config --cflags --libs` -std=gnu99
 

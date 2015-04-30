@@ -132,32 +132,37 @@ char* select_query(char * option){
 /** Funcao que envia e recebe mensagens do servidor.
  * Os mensagens enviadas sao na forma de queries SQL, enquanto
  * as respostas sao os resultados dessas queries. sockfd guarda o socket
- * usado na conexao; t1 e t2 sao valores intermediarios de
- * intervalos de tempo que serao retornados por parametro e usados para calcular
- * intervalos entre operacoes. bytes_read retorna por parametro o numero 
- * de bytes lidos na mensagem.
+ * usado na conexao; t1 eh o intervalo de tempo total de conexao, entre o envio
+ * da mensagem e recebimento da resposta do servidor.
+ * bytes_read retorna por parametro o numero de bytes lidos na mensagem.
  * A funcao retorna o resultado da query com header de sucesso.*/
-char* queryToServer (int sockfd, float *t1, float *t2, char* query, int *bytes_read){
+char* queryToServer (int sockfd, float *t1, char* query, int *bytes_read){
 	int len, bytes_sent, total_read = 0;
 	len = strlen(query);
 	*bytes_read = 0;
     static char buf[MAXBUFLEN];
     static char result[MAXBUFLEN];
     result[0] = 0;
-	*t1 = tempo (); // tempo antes de enviar a query
+    struct timeval twait; // tempo de espera de resposta
+    twait.tv_sec = 3;
+    twait.tv_usec = 50000;
+    
+    tempo(); // inicia o relogio antes de enviar a msg
+    
 	if ((bytes_sent = send(sockfd, query, len, 0)) == -1)
 		perror("send");
+		
     // printf("bytes_sent: %d, len: %d\n", bytes_sent, len);
-    while ((*bytes_read = recv(sockfd, buf, MAXBUFLEN-1, 0)) > 0){
-		buf[*bytes_read] = 0;
-		strcat(result, buf);
-		total_read += *bytes_read;
-	}
-	if (*bytes_read < 0)
+    if ((*bytes_read = recv(sockfd, buf, MAXBUFLEN-1, 0)) < 0)
 		perror ("recv");
+	
+	*t1 = tempo(); // tempo apos receber a resposta do servidor
+	buf[*bytes_read] = 0;
+	strcat(result, buf);
+	total_read = *bytes_read;	
+		
 	printf("total_read: %d\n", total_read);
-
-	*t2 = tempo(); // tempo apos receber a resposta do servidor
+	
 	//printf("\n\nresult: %s\n\n", result);
 		
 	return result;
@@ -257,17 +262,16 @@ int main (int argc, char** argv) {
 
 	struct addrinfo hints, *res;
     int status;
-    char ipstr[INET6_ADDRSTRLEN];
     int sockfd;
 
     if (argc != 2) {
-        fprintf(stderr,"usage: showip hostname\n");
+        fprintf(stderr,"usage: show ip hostname\n");
         return 1;
     }
 
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_UNSPEC; // AF_INET or AF_INET6 to force version
-    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_socktype = SOCK_DGRAM;
 
     if ((status = getaddrinfo(argv[1], SERV_PORT, &hints, &res)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
@@ -278,7 +282,6 @@ int main (int argc, char** argv) {
     char option;
     char* query = select_query(&option);
     char* correct_answer = generate_correct_answer(query);
-    //strcpy(query, "blablabla");
     
     int modo = select_modo(), repeticoes, k;
     FILE *fp;
@@ -296,41 +299,42 @@ int main (int argc, char** argv) {
 	
 	// realizar os testes
     for (k = 0; k < repeticoes; k++){
-		sockfd = socket (res->ai_family, res->ai_socktype, res->ai_protocol);
-		float t1, t2, t3, tQuery; // serao as contagens de tempo
+		if ( (sockfd = socket (res->ai_family, res->ai_socktype, res->ai_protocol)) == -1) {
+			perror("talker: socket");
+            continue;
+		}
+		
+		float t1, tQuery; // serao as contagens de tempo
 		int bytes_read;
-		tempo(); // inicia o relogio
+		
+		// conecta com o servidor apenas para armazenar seus dados
 		if (connect(sockfd, res->ai_addr, res->ai_addrlen) < 0)
 			perror("connect");
 		else if (modo == 1)
-			printf("Conectado ao servidor com sucesso.\n");
+			printf("Dados do servidor obtidos com sucesso.\n");
 			
-		char* buf = queryToServer (sockfd, &t1, &t2, query, &bytes_read);
+		char* buf = queryToServer (sockfd, &t1, query, &bytes_read);
 		close (sockfd);
-		t3 = tempo();
 		
 		if (modo == 1)
 			printf("%s\n", buf); // imprime o retorno do servidor
 		
 		/* Aqui o tempo esta estrutrado do seguinte modo:
-		 * t1: o intervalo de tempo entre o inicio da contagem do relogio
-		 * e imediatamente antes do envio do primeiro "send" ao servidor.
-		 * t2: o intervalo entre t1 e imediatamente apos a resposta do servidor.
-		 * t3: intervalo entre t2 e o fechamento da conexao.
-		 * */
+		 * t1: o intervalo de tempo entre o inicio da contagem do relogio (antes do "send")
+		 * e imediatamente apos o "recv" (apos a resposta do servidor)
+		 */
 		 
-		/* Dessa forma, t1+t2+t3 eh o tempo total, desde antes do connect() ateh depois do close().
-		 * t2 guarda o tempo de entre send e recv */
+		/* Dessa forma, t1 eh o tempo total da conexao UDP, desde antes do send() ate depois do recv().
+		 */
 		
 		if (modo == 1)
-			printf("\ntempo total de conversa: %f\ntempo entre send e recv: %f\n", t1+t2+t3, t2);
+			printf("\ntempo total de conversa (entre send e recv): %f\n", t1);
 		else{
-			fprintf(fp, "%f %f %d\n", t1+t2+t3, t2, strcmp(buf, correct_answer));
+			fprintf(fp, "%f %d\n", t1, strcmp(buf, correct_answer));
 		}
 			
-		/* Essa saida para arquivo eh da seguinte forma: a primeira coluna da o tempo total, desde o connect()
-		 * ateh o close(). A segunda da o tempo do send() ao recv(). A terceira
-		 * da a corretude da resposta recebida pelo servidor: se eh 0, a resposta esta correta.
+		/* Essa saida para arquivo eh da seguinte forma: a primeira coluna da o tempo total, desde o send()
+		 * A terceira da a corretude da resposta recebida pelo servidor: se eh 0, a resposta esta correta.
 		 * Qualquer outro valor significa resposta errada (algo da mensagem se alterou durante a transmissao) */
 	}
 	
