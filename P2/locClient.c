@@ -12,6 +12,7 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <netinet/udp.h>
 #include <my_global.h>
 #include <mysql.h>
 #define SERV_PORT "35368"
@@ -145,17 +146,25 @@ char* queryToServer (int sockfd, float *t1, char* query, int *bytes_read){
     result[0] = 0;
     struct timeval twait; // tempo de espera de resposta
     twait.tv_sec = 3;
-    twait.tv_usec = 50000;
+    twait.tv_usec = 500000;
+    fd_set readfds;
+    FD_ZERO(&readfds);
+    FD_SET(sockfd, &readfds); // TENTAR ADICIONAR AQUI PRIMEIRO VER SE FUNCIONA
     
     tempo(); // inicia o relogio antes de enviar a msg
     
 	if ((bytes_sent = send(sockfd, query, len, 0)) == -1)
 		perror("send");
-		
-    // printf("bytes_sent: %d, len: %d\n", bytes_sent, len);
-    if ((*bytes_read = recv(sockfd, buf, MAXBUFLEN-1, 0)) < 0)
-		perror ("recv");
 	
+	select(sockfd+1, &readfds, NULL, NULL, &twait);
+	if (FD_ISSET(sockfd, &readfds)){
+		if ((*bytes_read = recv(sockfd, buf, MAXBUFLEN-1, 0)) < 0)
+			perror ("recv1");
+	}
+	else {
+		strcpy(buf, "timeout\n");
+		*bytes_read = strlen(buf);
+	}
 	*t1 = tempo(); // tempo apos receber a resposta do servidor
 	buf[*bytes_read] = 0;
 	strcat(result, buf);

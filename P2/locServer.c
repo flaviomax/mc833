@@ -14,6 +14,7 @@
 #include <netinet/in.h>
 #include <my_global.h>
 #include <mysql.h>
+#include <unistd.h>
 #define SERV_PORT "35368"
 #define BACKLOG 5
 #define MAXBUFLEN 1000000
