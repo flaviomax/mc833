@@ -8,20 +8,20 @@ library(ggplot2)
 library(reshape)
 
 # Leitura dos tempos de cada operacao no cliente
-t1 <- read.table("results/test1.txt", sep = " ", col.names = c("tempoTotal", "check"))
-t2 <- read.table("results/test2.txt", sep = " ", col.names = c("tempoTotal", "check"))
-t3 <- read.table("results/test3.txt", sep = " ", col.names = c("tempoTotal", "check"))
-t4 <- read.table("results/test4.txt", sep = " ", col.names = c("tempoTotal", "check"))
-t5 <- read.table("results/test5.txt", sep = " ", col.names = c("tempoTotal", "check"))
-t6 <- read.table("results/test6.txt", sep = " ", col.names = c("tempoTotal", "check"))
-t7 <- read.table("results/test7.txt", sep = " ", col.names = c("tempoTotal", "check"))
+t1 <- read.table("results/test1.txt", sep = " ", col.names = c("tempoTotal", "tempoTransmissao", "check"))
+t2 <- read.table("results/test2.txt", sep = " ", col.names = c("tempoTotal", "tempoTransmissao", "check"))
+t3 <- read.table("results/test3.txt", sep = " ", col.names = c("tempoTotal", "tempoTransmissao", "check"))
+t4 <- read.table("results/test4.txt", sep = " ", col.names = c("tempoTotal", "tempoTransmissao", "check"))
+t5 <- read.table("results/test5.txt", sep = " ", col.names = c("tempoTotal", "tempoTransmissao", "check"))
+t6 <- read.table("results/test6.txt", sep = " ", col.names = c("tempoTotal", "tempoTransmissao", "check"))
+t7 <- read.table("results/test7.txt", sep = " ", col.names = c("tempoTotal", "tempoTransmissao", "check"))
 
 # Tipo de cada uma das 7 operacoes
 op_tipo <- factor(c("OperacaoPequena", "OperacaoPequena", "OperacaoPequena", "OperacaoPequena", "OperacaoGrande", "OperacaoEscrita", "OperacaoPequena"), levels = c("OperacaoPequena", "OperacaoGrande", "OperacaoEscrita"))
 
 # Pega o tempo total de cada operacao e calcula a media e o desvio de cada uma
-tc_total <- data.frame("1" = t1$tempoTotal*1000, "2" = t2$tempoTotal*1000, "3" = t3$tempoTotal*1000, "4" = t4$tempoTotal*1000, "5"=t5$tempoTotal*1000, "6"=t6$tempoTotal*1000, "7"=t7$tempoTotal*1000, check.names = FALSE)
-top_total <- melt(tc_total)
+top_total <- data.frame("1" = t1$tempoTotal*1000, "2" = t2$tempoTotal*1000, "3" = t3$tempoTotal*1000, "4" = t4$tempoTotal*1000, "5"=t5$tempoTotal*1000, "6"=t6$tempoTotal*1000, "7"=t7$tempoTotal*1000, check.names = FALSE)
+top_total <- melt(top_total)
 t_means <- tapply(top_total$value, top_total$variable, mean)
 t_sds <- tapply(top_total$value, top_total$variable, sd)*2
 # Variavel final com tempo medio total por operacao, desvio padrao de cada uma e o tipo de operacao
@@ -48,7 +48,8 @@ st7 <- read.table("results/tempo_serv7.txt", sep = " ", col.names = "tempoTransm
 
 # pega o tempo de transmissao do servidor e o tempo de transmissao do cliente, subtrai os dois para obter o tempo total de transmissao
 ts_transmissao <- data.frame("1" = st1$tempoTransmissao*1000, "2" = st2$tempoTransmissao*1000, "3" = st3$tempoTransmissao*1000, "4" = st4$tempoTransmissao*1000, "5"=st5$tempoTransmissao*1000, "6"=st6$tempoTransmissao*1000, "7"=st7$tempoTransmissao*1000, check.names = FALSE)
-ttrans_total <- (tc_total - ts_transmissao)/2
+tc_transmissao <- data.frame("1" = t1$tempoTransmissao*1000, "2" = t2$tempoTransmissao*1000, "3" = t3$tempoTransmissao*1000, "4" = t4$tempoTransmissao*1000, "5"=t5$tempoTransmissao*1000, "6"=t6$tempoTransmissao*1000, "7"=t7$tempoTransmissao*1000, check.names = FALSE)
+ttrans_total <- (tc_transmissao - ts_transmissao)/2
 
 # Calcula a media e o desvio padrao da transmissao de cada operacao
 ttrans_total <- melt(ttrans_total)
