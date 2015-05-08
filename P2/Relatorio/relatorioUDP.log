@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.8.9)  22 APR 2015 15:45
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.30)  8 MAY 2015 18:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**relatorioTCP.tex
-(./relatorioTCP.tex
+**relatorioUDP.tex
+(./relatorioUDP.tex
 LaTeX2e <2011/06/27>
-Babel <3.9h> and hyphenation patterns for 5 languages loaded.
+Babel <3.9h> and hyphenation patterns for 6 languages loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size12.clo
@@ -1006,8 +1006,8 @@ Package: translator 2010/06/12 ver 1.10
 \@input{abaco.aux}
 \openout2 = `abaco.aux'.
 
-(./abaco.tex) (./relatorioTCP.aux)
-\openout1 = `relatorioTCP.aux'.
+(./abaco.tex) (./relatorioUDP.aux)
+\openout1 = `relatorioUDP.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 52.
 LaTeX Font Info:    ... okay on input line 52.
@@ -1296,9 +1296,9 @@ File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
 
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./relatorioTCP.toc)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./relatorioUDP.toc)
 \tf@toc=\write3
-\openout3 = `relatorioTCP.toc'.
+\openout3 = `relatorioUDP.toc'.
 
  [1
 
@@ -1329,12 +1329,12 @@ line 240.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [8] [9 <./diagrama/resultadosTempoTransmissao.png (PNG copy)>]
-(./relatorioTCP.bbl) [10] (./relatorioTCP.aux) ) 
+(./relatorioUDP.bbl) [10] (./relatorioUDP.aux) ) 
 Here is how much of TeX's memory you used:
- 13180 strings out of 494963
- 258011 string characters out of 6179648
- 281387 words of memory out of 5000000
- 16098 multiletter control sequences out of 15000+600000
+ 13180 strings out of 494956
+ 258011 string characters out of 6179316
+ 281419 words of memory out of 5000000
+ 16099 multiletter control sequences out of 15000+600000
  64422 words of font info for 61 fonts, out of 8000000 for 9000
  42 hyphenation exceptions out of 8191
  39i,11n,45p,10404b,950s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1346,7 +1346,7 @@ x12.pfb></usr/share/texmf/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmmi12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.p
 fb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/ty
 pe1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri12.pfb>
-Output written on relatorioTCP.pdf (11 pages, 251742 bytes).
+Output written on relatorioUDP.pdf (11 pages, 252841 bytes).
 PDF statistics:
  80 PDF objects out of 1000 (max. 8388607)
  55 compressed objects within 1 object stream

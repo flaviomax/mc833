@@ -102,15 +102,15 @@
 \onehalfspacing
 
 \begin{abstract}
-Este trabalho focou-se no estudo temporal de redes cliente-servidor baseadas em comunicação TCP. Foi implementado um serviço de locadora de filmes baseado em {\it MySQL} no servidor, e ao cliente foram adicionadas diversas operações de acesso ao banco, baseando-se em operações de consultas pequenas, grandes e de escrita. Observou-se que a escrita no banco é o processo mais lento, enquanto operações de consultas extensas são apenas brevemente mais lentas que buscas mais curtas. Outro ponto interessante medido foi a confiabilidade das transmissões e, conforme prometido pelo protocolo TCP, todas as mensagens foram recebidas corretamente. Além disso, uma breve análise de tamanho de código mostrou que operações de redes não são as mais presentes em uma implementação desse tipo.
+Este trabalho focou-se no estudo temporal de redes cliente-servidor baseadas em comunicação UDP e um comparativo com um estudo anterior baseado em comunicação TCP. Foi implementado um serviço de locadora de filmes baseado em {\it MySQL} no servidor, e ao cliente foram adicionadas diversas operações de acesso ao banco, baseando-se em operações de consultas pequenas, grandes e de escrita. Observou-se que a escrita no banco é o processo mais lento, enquanto operações de consultas extensas são apenas brevemente mais lentas que buscas mais curtas, o que também ocorreu com o TCP. Outro ponto interessante medido foi a confiabilidade das transmissões, em ambos os protocolos nenhuma mensagem foi perdida. Notamos também que o tempo total de comunicação no protocolo UDP foi cerca de 10 vezes menor que o TCP. Além disso, uma breve análise de tamanho de código mostrou que operações de redes não são as mais presentes em uma implementação desse tipo.
 \end{abstract}
 
 \section{Introdução}
 Na Internet, a grande maioria das montagens de comunicação baseia-se em um sistema cliente-servidor. Nesse contexto, o servidor guarda alguma informação que é relevante ao cliente, que pede essa informação através de uma mensagem na rede; o servidor, por sua vez, responde esse pedido com outra(s) mensagem(ns) contendo a informação requisitada.
 
-O protocolo da camada de transporte escolhido para este projeto é o {\it Transmission Control Protocol} (TCP)~\cite{postel1981transmission}. Tal protocolo garante que as mensagens enviadas por um host cheguem sem alterações (se o conteúdo da mensagem não corresponder ao {\it checksum}, ela é re-enviada), além de garantir que as mensagens chegam em ordem. Num trabalho futuro, faremos as análises usando também o {\it User Datagram Protocol} (UDP)~\cite{postel1980user} e compararemos os resultados.
+O protocolo da camada de transporte escolhido para este projeto é o {\it User Datagram Protocol} (UDP)~\cite{postel1980user}. Tal protocolo não garante confiabilidade: é baseado em troca rápida de mensagens sem {\it hand shaking}. Neste trabalho faremos uma comparação com um trabalho anterior que realizou as análises usando o protocolo {\it Transmission Control Protocol} (TCP)~\cite{postel1981transmission}, que por outro lado é confiável.
 
-Neste trabalho, num primeiro momento, o foco principal de nossa análise será a medida de tempo total de comunicação entre cliente e servidor, além de uma aproximação do tempo de transmissão das mensagens entre os dois (tempo de as mensagens saírem de um host e chegarem ao outro). Analisaremos também brevemente a confiabilidade das mensagens enviadas, mas, conforme já especificado, a confiabilidade das mensagens é garantida pelo protocolo. O tamanho de código será também analisado, além de um breve parecer sobre o nível de abstração do sistema desenvolvido.
+Neste trabalho, num primeiro momento, o foco principal de nossa análise será a medida de tempo total de comunicação entre cliente e servidor, além de uma aproximação do tempo de transmissão das mensagens entre os dois (tempo de as mensagens saírem de um host e chegarem ao outro). Analisaremos também brevemente a confiabilidade das mensagens enviadas, que não é garantida pelo protocolo. Em seguida faremos uma comparação desses resultados com aqueles obtidos em um trabalho passado que analisou o protocolo TCP. O tamanho do código será também analisado, além de um breve parecer sobre o nível de abstração do sistema desenvolvido.
 
 \section{Descrição Geral do Sistema}
 
@@ -269,6 +269,6 @@ A confiabilidade garantida pelo protocolo TCP utilizado na comunicação do sist
 
 \singlespace
 \bibliographystyle{unsrt}
-\bibliography{relatorioTCP}
+\bibliography{relatorioUDP}
 
 \end{document}
