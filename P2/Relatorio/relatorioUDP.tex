@@ -78,7 +78,7 @@
 \vspace*{2.0cm}
 
 \textsc{\Large Comunicação Cliente-Servidor} \\ [0.1cm]
-\textsc{\Large Usando Protocolo TCP}
+\textsc{\Large Usando Protocolo UDP}
 
 \vspace{2.5cm}
 
@@ -108,13 +108,13 @@ Este trabalho focou-se no estudo temporal de redes cliente-servidor baseadas em 
 \section{Introdução}
 Na Internet, a grande maioria das montagens de comunicação baseia-se em um sistema cliente-servidor. Nesse contexto, o servidor guarda alguma informação que é relevante ao cliente, que pede essa informação através de uma mensagem na rede; o servidor, por sua vez, responde esse pedido com outra(s) mensagem(ns) contendo a informação requisitada.
 
-O protocolo da camada de transporte escolhido para este projeto é o {\it User Datagram Protocol} (UDP)~\cite{postel1980user}. Tal protocolo não garante confiabilidade: é baseado em troca rápida de mensagens sem {\it hand shaking}. Neste trabalho faremos uma comparação com um trabalho anterior que realizou as análises usando o protocolo {\it Transmission Control Protocol} (TCP)~\cite{postel1981transmission}, que por outro lado é confiável.
+O protocolo da camada de transporte escolhido para este projeto é o {\it User Datagram Protocol} (UDP)~\cite{postel1980user}. Tal protocolo não garante confiabilidade: é baseado em troca rápida de mensagens, e sem {\it hand shaking}. Neste trabalho faremos uma comparação com um trabalho anterior que realizou as análises usando o protocolo {\it Transmission Control Protocol} (TCP)~\cite{postel1981transmission}, que por outro lado é confiável.
 
 Neste trabalho, num primeiro momento, o foco principal de nossa análise será a medida de tempo total de comunicação entre cliente e servidor, além de uma aproximação do tempo de transmissão das mensagens entre os dois (tempo de as mensagens saírem de um host e chegarem ao outro). Analisaremos também brevemente a confiabilidade das mensagens enviadas, que não é garantida pelo protocolo. Em seguida faremos uma comparação desses resultados com aqueles obtidos em um trabalho passado que analisou o protocolo TCP. O tamanho do código será também analisado, além de um breve parecer sobre o nível de abstração do sistema desenvolvido.
 
 \section{Descrição Geral do Sistema}
 
-O sistema construído consiste em uma simples montagem de cliente-servidor, com comunicação TCP. Como discutido, tal protocolo garante que as mensagens enviadas entre cliente e servidor cheguem em ordem e exatamente iguais ao conteúdo enviado.
+O sistema construído consiste em uma simples montagem de cliente-servidor, com comunicação UDP. Como discutido, tal protocolo não garante que as mensagens enviadas efetivamente chegarão ao destinatário, nem que chegarão na ordem correta.
 
     O sistema montado é uma emulação de um serviço de locadora online, onde o servidor contém diversas informação sobre os filmes que possui em seu estoque, os quais podem ser acessadas por clientes ou pelo cliente administrador da locadora. 
     
@@ -133,9 +133,9 @@ Os acessos do cliente ou do administrador do locadora ao servidor são com pedid
 em estoque.
 \end{myenumerate}
 
-    Todos esses acessos podem ser feitos em dois modos de consulta: um que realiza a consulta apenas uma vez, para testar sua corretude, e outro que realiza a consulta sequencialmente, cada acesso é repetido 30 vezes e todos os tempos são armazenados em um arquivo {\it log}, para possibilitar uma futura análise dos mesmos.
+    Todos esses acessos podem ser feitos em dois modos de consulta: um que realiza a consulta apenas uma vez, para testar sua corretude, e outro que realiza a consulta sequencialmente; cada acesso é repetido 30 vezes e todos os tempos são armazenados em um arquivo {\it log}, para possibilitar uma futura análise dos mesmos.
     
-    Classificamos esses acessos em 3 categorias: as consultas pequenas, consultas grandes e operações de escrita. De acordo com a consulta que cada operação realiza podemos dividí-las da seguinte forma: no primeiro grupo se encontram as operações de 1 a 4 e a operação 7, no segundo grupo temos apenas a operação 5 e no terceiro grupo temos a operação 6. 
+    Classificamos esses acessos em 3 categorias: as consultas pequenas, consultas grandes e operações de escrita. De acordo com a consulta que cada operação realiza podemos dividi-las da seguinte forma: no primeiro grupo se encontram as operações de 1 a 4 e a operação 7, no segundo grupo temos apenas a operação 5 e no terceiro grupo temos a operação 6. 
     
 O primeiro grupo é caracterizado por uma consulta rápida de até 1500 bytes, que é o tamanho máximo MTU (Maximum Transmission Unit) que um pacote pode ter para ser transmitido pela camada Ethernet. O segundo grupo realiza consultas longas, com mais de 1500 bytes, que devem ser quebradas em mais de um pacote para serem enviadas. E o terceiro grupo é caracterizado por uma consulta que carrega um maior atraso do bando de dados, uma vez que no tempo medido está embutido o tempo de escrita no banco.
 
@@ -148,46 +148,61 @@ Em um sistema real de cliente-servidor os dados são em sua maioria armazenados 
     
     No acesso ao banco de dados, os clientes podem apenas acessar a informação, enquanto o cliente administrador da locadora pode, além do acesso, alterar a quantidade de exemplares em estoque. Para garantir esse privilégio de acesso, é necessário uma senha para entrar no modo administrador, a qual é processada pelo programa e só após confirmada o acesso diferenciado ao banco pode ocorrer.
     
-Com o objetivo de fazer um sistema robusto, que garante a confiabilidade do mesmo, optamos por utilizar o mesmo banco de dados do servidor no lado do Cliente, possibilitando assim uma conferência dos dados retornados pelas consultas. Apesar de ser uma manobra simulada, nos permite confirmar a confiabilidade do protocolo TCP, que para todos os nossos exemplos retornou as consultas em ordem, da forma que foram enviadas pelo servidor. E portanto, essa manobra também nos permitirá dizer se o mesmo ocorre quando utilizamos um protocolo sem confiabilidade, que é o caso do UDP.
+Com o objetivo de fazer um sistema robusto, o lado do Cliente na aplicação desenvolvida também tem uma cópia do banco de dados. Esse banco local serve para verificar os resultados do servidor remoto: se a resposta do servidor for diferente da esperada (que já é conhecida devido ao banco de dados local), essa diferença também é salva pelo experimento.
 
 \section{Detalhes de Implementação}
 
 Tanto o cliente quanto a servidor foram implementados baseando-se nas descrições encontradas em~\cite{hall19beej}. A porta do servidor escolhida para comunicação foi a porta “35368”.
 
-Para o servidor, o socket de “escuta” é iniciado com o auxílio da operação {\it getaddrinfo()}; o tipo de socket é o SOCK\_STREAM, que caracteriza uma comunicação TCP. Além disso, por ser TCP, após fazer o {\it bind} do socket à porta supracitada, o servidor fica “escutando”, esperando por conexões.
+Para o servidor, o socket de “escuta” é iniciado com o auxílio da operação {\it getaddrinfo()}; o tipo de socket é o SOCK\_DGRAM, que caracteriza uma comunicação UDP.
 
-O servidor então entra em um loop infinito, no qual fica “aceitando” novas conexões. Quando recebe um pedido de conexão, faz um {\it fork} e a comunicação com esse cliente é tratada por um processo filho. Dessa forma, garantimos que o servidor aceita outras conexões mesmo quando já está conectado a algum cliente.
+O servidor entra em um loop no qual fica aceitando mensagens na ordem em que chegam, com a função {\it recvfrom}(). Ao receber a mensagem, a processa e envia a resposta com {\it sendto}(), para o mesmo cliente recebido pela chamada a {\it recvfrom}().
 
-No cliente, seguimos a comunicação também como descrito~\cite{hall19beej}: o socket de comunicação também é criado com o auxílio de {\it getaddrinfo()}. Em ambos os casos, como a comunicação é feita em LAN, a função retorna apenas as informações de cliente e servidor diretamente, então não é necessário o loop como feito na literatura~\cite{hall19beej}.
+No cliente, seguimos a comunicação também como descrito~\cite{hall19beej}: o socket de comunicação também é criado com o auxílio de {\it getaddrinfo()}. Em ambos os casos, como a comunicação é feita em LAN, a função retorna apenas as informações de cliente e servidor diretamente, então não é necessário o loop como feito na literatura~\cite{hall19beej}. Como estamos trabalhando com apenas um servidor, no lado do cliente podemos usar a função {\it connect}() como se fosse comunicação TCP. O conceito é diferente, entretanto: enquanto no protocolo TCP o {\it connect}() enviava a mensagem de {\it hand-shaking} ao servidor, no UDP ela apenas salva localmente o destino e remetente de {\it send}() e {\it recv}(), respectivamente.
+
+A função {\it recv}() do cliente, entretanto, é levemente diferente: como no UDP mensagens podem se perder, pode ser que a requisição ao servidor, ou sua resposta ao cliente, se percam na rede. Dessa forma, o cliente ficaria bloqueado esperando uma resposta para sempre. Usamos então em nossa vantagem a função {\it select}(), que nos permite usar um limite de tempo para esperar a resposta. Colocamos esse tempo como $\SI{3.5}{\second}$: se a resposta do servidor demorar mais que isso, consideramos que ela se perdeu na rede e partimos para a próxima requisição.
 
 O cliente, a cada vez que é iniciado, joga na tela um {\it prompt} com as opções de requisição ao servidor. Em seguida, após escolhida a opção, o cliente dá a opção de fazer o acesso apenas uma vez (para verificar a corretude da aplicação) ou trinta vezes. Se o usuário escolher por fazer o acesso apenas uma vez, o resultado da consulta é exibido na tela do cliente. Se escolher por fazer a consulta trinta vezes, um arquivo de {\it log} de respostas é criado na mesma pasta do cliente, com o nome {\it testX.txt}, onde {\it X} é o número do teste escolhido pelo usuário no {\it prompt}.
 
 A consulta é feita ao servidor pelo meio de envio de consultas {\it MySQL}, que são montadas no próprio programa do cliente. Essas consultas são enviadas como mensagens ao servidor que simplesmente as aplica ao seu banco de dados e retorna o resultado das consultas de leitura ou escrita, também em forma de mensagens. Essa mesma consulta é aplicada a um banco de dados local no cliente, que é exatamente igual ao do servidor; o resultado local dessa consulta é usado para verificar a confiabilidade do resultado enviado pelo servidor.
 
-Esse arquivo de {\it log} gerado tem o seguinte formato: são trinta linhas e três colunas, onde cada linha representa um dos testes. A primeira coluna representa o tempo total de comunicação entre cliente e servidor (desde o {\it connect()} até o {\it close()}); a segunda dá o intervalo de tempo contado desde imediatamente antes do {\it send()} da consulta até imediatamente após o {\it recv()} do resultado. A terceira coluna traz um valor numérico da seguinte forma: se a mensagem recebida for igual à gerada no banco de dados local, ou seja, se a transmissão foi confiável e as mensagens chegaram corretamente, esse valor é zero. Qualquer outro valor diferente de zero significa que houve corrupção de mensagens.  Como o protocolo de transporte utilizado é o TCP, espera-se que esse valor seja zero para todos os testes. Num próximo experimento, quando utilizaremos UDP como protocolo de transporte, esse valor poderá variar.
+Esse arquivo de {\it log} gerado tem o seguinte formato: são trinta linhas e duas colunas, onde cada linha representa um dos testes. A primeira coluna representa o tempo total de comunicação entre cliente e servidor (desde imediatamente antes do {\it send}() até imediatamente depois do {\it recv}()); a segunda coluna traz um valor numérico da seguinte forma: se a mensagem recebida for igual à gerada no banco de dados local, ou seja, se a transmissão foi confiável e as mensagens chegaram corretamente, esse valor é zero. Qualquer outro valor diferente de zero significa que houve corrupção de mensagens. 
 
-O servidor também concatena a um arquivo de {\it log} dados sobre cada conexão que coordena. Como o servidor concatena informações num mesmo arquivo, quando o cliente fizer, por exemplo, trinta consultas de títulos de filmes, as últimas trinta entradas desse {\it log} do servidor guardarão os dados sobre essas consultas. Cada entrada nesse {\it log} é um {\it float} que guarda o tempo de acesso do servidor ao banco de dados; esse tempo é o intervalo desde imediatamente após o {\it recv()} da consulta até imediatamente antes do {\it send()} do resultado. Dessa forma, podemos calcular o tempo de transmissão das mensagens: usando o tempo $ tServer $ desse {\it log} do servidor e a segunda coluna do {\it log} do cliente ($ tClient $), o tempo de transmissão de uma mensagem ao outro será dado por:
+O servidor também concatena a um arquivo de {\it log} dados sobre cada conexão que coordena. Como o servidor concatena informações num mesmo arquivo, quando o cliente fizer, por exemplo, trinta consultas de títulos de filmes, as últimas trinta entradas desse {\it log} do servidor guardarão os dados sobre essas consultas. Cada entrada nesse {\it log} é um {\it float} que guarda o tempo de acesso do servidor ao banco de dados; esse tempo é o intervalo desde imediatamente após o {\it recvfrom()} da consulta até imediatamente antes do {\it sendto()} do resultado. Dessa forma, podemos calcular o tempo de transmissão das mensagens: usando o tempo $ tServer $ desse {\it log} do servidor e a segunda coluna do {\it log} do cliente ($ tClient $), o tempo de transmissão de uma mensagem ao outro será dado por:
 \begin{equation}
 {\text {Tempo de Transmissão}} = \frac{tClient - tServer}{2}
 \label{eqn:time}
 \end{equation}
 Um outro pequeno detalhe de implementação é que apenas o cliente administrador da locadora deve ter autorização para alterar o número de exemplares em estoque de cada filme. Portanto, quando um cliente decide fazer essa alteração, é perguntado por uma senha. Essa senha é verificada no próprio programa do cliente (é hard-coded como “1234”) e, apenas se estiver correta, o programa continua. Essa escrita no banco de dados também é hard-coded para garantir a consistência entre o banco de dados local e o remoto (do servidor), para que posteriormente possa ser verificada a confiabilidade das mensagens. Numa situação de mundo real, onde não há banco de dados local, essa opção não pode ser hard-coded.
 
-O tamanho máximo de buffer adotado é de um milhão de caracteres; o tamanho máximo das consultas são 150 caracteres. O backlog suportado pelo servidor é de cinco pedidos de conexão.
+O tamanho máximo de buffer adotado é de um milhão de caracteres; o tamanho máximo das consultas são 150 caracteres.
 
 
 \section{Análise dos Resultados}
 
+Toda a comunicação foi feita em LAN, com cliente e servidor conectados a um roteador D-Link DIR-600 por Wi-fi.
+
 \subsection{Tempo total de Comunicação}
 
 Em todos os resultados dos tempos médios utilizamos um intervalo de confiança com nível de confiança de 95\%, obtido a partir da soma ou subtração de dois desvios padrão.
+
+Temos nesta seção temos os resultados dos experimentos usando o protocolo UDP; temos também os resultados para os mesmos experimentos usando TCP, de um relatório feito anteriormente, e esses dados serão comparados.
     
-Primeiramente geramos um gráfico com o tempo total de conexão com o servidor para cada uma das operações. O resultado segue demonstrado na Tabela~\ref{table:total} e na Figura~\ref{fig:total}.
+Primeiramente geramos um gráfico com o tempo total de conexão com o servidor para cada uma das operações. O resultado segue demonstrado na Tabela~\ref{INSERIR TABELA UDP TOTAL AQUI} e na Figura~\ref{fig:totalU}.
+
+Observe também na Tabela~\ref{table:totalT} e na Figura~\ref{fig:totalT} os resultados de tempo total de conexão, desde o {\it connect}() até o {\it close}(), para o protocolo TCP, para os mesmos experimentos.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{diagrama/resultadosTempoTotalUDP.png}
+\caption{Mostra o tempo médio e o intervalo de confiança de 95\% para as sete operações, na mesma ordem em que foram descritas, utilizando-se o protocolo UDP. Tempo calculado no cliente, o envio da mensagem ao servidor, até a recepção da resposta.}
+\label{fig:totalU}
+\end{figure}
 
 \begin{table}[h]
 \centering
-\caption{Tabela mostrando o tempo médio e intervalo de confiança para cada uma das sete operações, na ordem em que foram descritas. Tempo calculado no cliente, desde a abertura até o fechamento da conexão.}
-\label{table:total}
+\caption{Tabela mostrando o tempo médio e intervalo de confiança para cada uma das sete operações, na ordem em que foram descritas, para o protocolo TCP. Tempo calculado no cliente, desde a abertura até o fechamento da conexão.}
+\label{table:totalT}
 \begin{tabular}{lll}
 Operação & Tempo Médio Total (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second})\\ \hline
 1        & 38.42           & 5.59   \\
@@ -203,25 +218,36 @@ Operação & Tempo Médio Total (\SI{}{\milli\second}) & Intervalo de Confiança
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{diagrama/resultadosTempoTotal.png}
-\caption{Mostra o tempo médio e o intervalo de confiança de 95\% para as sete operações, na mesma ordem em que foram descritas. Tempo calculado no cliente, desde a abertura até o fechamento da conexão.}
-\label{fig:total}
+\caption{Mostra o tempo médio e o intervalo de confiança de 95\% para as sete operações, na mesma ordem em que foram descritas, para o protocolo TCP. Tempo calculado no cliente, desde a abertura até o fechamento da conexão.}
+\label{fig:totalT}
 \end{figure}
 
-Os resultados que obtivemos para o tempo total de conexão dependem bastante das consultas ao banco de dados e do tamanho das mensagens. Esses mensagens nas operações pequenas, como já especificado, podem ser totalmente enviadas em apenas um pacote, enquanto nas operações grandes, vários pacotes são necessários para o envio completo das mensagens. Nas operações de escrita, apesar de só um pacote ser necessário para o envio da mensagem, a consulta ao banco de dados para alteração requer um tempo de conexão bem maior do que as consultas de informação. É interessante notar que o desvio da operação de escrita também é consideravelmente maior do que o das outras operações; acreditamos porém que essa variação é causada pelo atraso do banco de dados, e não da rede.
+Os resultados que obtivemos para o tempo total de conexão dependem bastante das consultas ao banco de dados e do tamanho das mensagens. Essas mensagens nas operações pequenas, como já especificado, podem ser totalmente enviadas em apenas um pacote, enquanto nas operações grandes, vários pacotes são necessários para o envio completo das mensagens. Nas operações de escrita, apesar de só um pacote ser necessário para o envio da mensagem, a consulta ao banco de dados para alteração requer um tempo bem maior de operação.
 
-Com isso em mente, os resultados foram como esperado. As operações pequenas estão todas na mesma faixa e a operação grande está apenas um pouco acima destas, visto que a única diferença entre essas duas categorias é a quantidade de pacotes recebidos, que causou um pequeno aumento no tempo medido. Já a operação de escrita apresenta uma grande diferença em relação as demais; o acesso ao banco para alteração de valores gera um {\it overhead} muito grande nesse medida, que acaba representando bem mais o tempo de alteração do banco de dados do que o tempo de conexão com o servidor.
+Com isso em mente, os resultados foram como esperado. Observe que tanto no TCP quanto no UDP as operações de escrita notoriamente tomam mais tempo que as outras. É notável também que as operações grandes levam um pouco mais de tempo que as pequenas - mas ainda têm tempos bem inferiores às de escrita.
+
+O fato a se notar, entretanto, é a escala vertical dos gráficos: embora eles sejam parecidos, em todas as operações o TCP tomou mais tempo que o UDP. Em todos os experimentos realizados, essa afirmação mostrou-se verdadeira.
 
 \subsection{Tempo de Transmissão}
 
-Em seguida geramos um gráfico com o tempo total de transmissão das mensagens para cada uma das operações, como explicitado pela equação~\ref{eqn:time}. O resultado segue na Tabela~\ref{table:transmissao} e Figura~\ref{fig:transmissao}.
+Em seguida geramos um gráfico com o tempo total de transmissão das mensagens para cada uma das operações, como explicitado pela equação~\ref{eqn:time}. O resultado para o UDP segue na Tabela~\ref{table:COLOCAR TABELA TRANSMISSAO AQUI} e Figura~\ref{fig:transmissaoU}. Na Tabela~\ref{table:transmissao} e Figura~\ref{fig:transmissao} temos os resultados para os mesmos experimentos utilizando o protocolo TCP.
 
 Os tempos de transmissão medem o tempo de comunicação entre o cliente e o servidor. Esse tempo deve depender apenas do tamanho das mensagens, que como já especificado, corresponde apenas a um pacote nas operações pequenas e de escrita e de vários pacotes nas operações grandes. 
 
-Os tempo obtidos para as operações pequenas e grandes condizem com essa expectativa; o tempo de transmissão da operação grande é levemente maior que o das pequenas. O tempo de transmissão da operação de escrita, porém, fica muito acima do esperado. Assumimos este ser um erro de medida: dado que isto é uma aproximação, o tempo total pode ter influenciado um atraso maior no tempo de transmissão.
+Os tempo obtidos para as operações pequenas e grandes condizem com essa expectativa, tanto no TCP quanto no UDP; no TCP, entretanto, as operações de escrita em alguns experimentos tiveram tempos de transmissão muito maiores (observe o alto desvio): acreditamos que isso se deva às aproximações no cálculo do tempo de transmissão. Para o UDP, entretanto, o tempo de transmissão foi totalmente dentro do esperado: operações pequenas e de escrita levaram quase sempre o mesmo tempo; operações grandes precisaram de um intervalo de tempo maior para serem transmitidas.
+
+Note que os tempos de transmissão das mensagens UDP foram muito inferiores aos tempos do TCP;  enquanto uma operação grande demorou cerca de $\SI{10}{\milli\second}$, em média, para ser transmitida no TCP, no UDP levou apenas $\SI{3}{\milli\second}$, em média.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{diagrama/resultadosTempoTransmissaoUDP.png}
+\caption{Tempo médio, com intervalo de confiança de 95\%, calculado conforme a equação~\ref{eqn:time}, para as sete operações na mesma ordem em que foram descritas, utilizando o protocolo UDP.}
+\label{fig:transmissaoU}
+\end{figure}
 
 \begin{table}[h]
 \centering
-\caption{Mostra o tempo médio e intervalo de confiança de 95\% para transmissão de mensagens segundo a equação~\ref{eqn:time} para cada uma das operações, na ordem em que foram descritas.}
+\caption{Mostra o tempo médio e intervalo de confiança de 95\% para transmissão de mensagens segundo a equação~\ref{eqn:time} para cada uma das operações, na ordem em que foram descritas, utilizando o protocolo TCP.}
 \label{table:transmissao}
 \begin{tabular}{lll}
 Operação & Tempo Médio de Transmissão (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second}) \\ \hline
@@ -238,7 +264,7 @@ Operação & Tempo Médio de Transmissão (\SI{}{\milli\second}) & Intervalo de 
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{diagrama/resultadosTempoTransmissao.png}
-\caption{Tempo médio, com intervalo de confiança de 95\%, calculado conforme a equação~\ref{eqn:time}, para as sete operações na mesma ordem em que foram descritas.}
+\caption{Tempo médio, com intervalo de confiança de 95\%, calculado conforme a equação~\ref{eqn:time}, para as sete operações na mesma ordem em que foram descritas, utilizando o protocolo TCP.}
 \label{fig:transmissao}
 \end{figure}
 

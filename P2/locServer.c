@@ -16,7 +16,6 @@
 #include <mysql.h>
 #include <unistd.h>
 #define SERV_PORT "35368"
-#define BACKLOG 5
 #define MAXBUFLEN 1000000
 #define MAX_QUERY_RESULT 1000000
 #define FLOAT_LENGTH 9
