@@ -73,7 +73,7 @@
 \vspace*{3.5cm}
 
 \begin{center}
-{\Large \bf MC833 - Relatório Científico 1}
+{\Large \bf MC833 - Relatório Científico 2}
 
 \vspace*{2.0cm}
 
@@ -90,7 +90,7 @@
 {\large Campinas - SP}
 \vspace*{0.2cm}
 
-{\large Abril de 2015}
+{\large Maio de 2015}
 \end{center}
 
 \clearpage
@@ -137,7 +137,7 @@ em estoque.
     
     Classificamos esses acessos em 3 categorias: as consultas pequenas, consultas grandes e operações de escrita. De acordo com a consulta que cada operação realiza podemos dividi-las da seguinte forma: no primeiro grupo se encontram as operações de 1 a 4 e a operação 7, no segundo grupo temos apenas a operação 5 e no terceiro grupo temos a operação 6. 
     
-O primeiro grupo é caracterizado por uma consulta rápida de até 1500 bytes, que é o tamanho máximo MTU (Maximum Transmission Unit) que um pacote pode ter para ser transmitido pela camada Ethernet. O segundo grupo realiza consultas longas, com mais de 1500 bytes, que devem ser quebradas em mais de um pacote para serem enviadas. E o terceiro grupo é caracterizado por uma consulta que carrega um maior atraso do bando de dados, uma vez que no tempo medido está embutido o tempo de escrita no banco.
+O primeiro grupo é caracterizado por uma consulta rápida de até 1500 bytes, que é o tamanho máximo MTU (Maximum Transmission Unit) que um pacote pode ter para ser transmitido pela camada Ethernet. No caso do protocolo TCP esse limite da Ethernet é respeitado no envio das mensagens, já no UDP a camada Ethernet também quebra as mensagens em pacotes de 1500 bytes, mas para enviá-los os junta novamente em uma só mensagem de tamanho máximo igual a 65 mil bytes (limite do UDP). O segundo grupo realiza consultas longas, com mais de 1500 bytes, que devem ser quebradas em mais de um pacote na camada Ethernet, como mencionado, e juntadas novamente no envio com o protocolo UDP. E o terceiro grupo é caracterizado por uma consulta que carrega um maior atraso do bando de dados, uma vez que no tempo medido está embutido o tempo de escrita no banco.
 
 
 \section{Armazenamento e Estruturas de Dados}
@@ -148,7 +148,7 @@ Em um sistema real de cliente-servidor os dados são em sua maioria armazenados 
     
     No acesso ao banco de dados, os clientes podem apenas acessar a informação, enquanto o cliente administrador da locadora pode, além do acesso, alterar a quantidade de exemplares em estoque. Para garantir esse privilégio de acesso, é necessário uma senha para entrar no modo administrador, a qual é processada pelo programa e só após confirmada o acesso diferenciado ao banco pode ocorrer.
     
-Com o objetivo de fazer um sistema robusto, o lado do Cliente na aplicação desenvolvida também tem uma cópia do banco de dados. Esse banco local serve para verificar os resultados do servidor remoto: se a resposta do servidor for diferente da esperada (que já é conhecida devido ao banco de dados local), essa diferença também é salva pelo experimento.
+Com o objetivo de fazer um sistema robusto, o lado do Cliente na aplicação desenvolvida também tem uma cópia do banco de dados. Esse banco local serve para verificar os resultados do servidor remoto: se a resposta do servidor for diferente da esperada (que já é conhecida devido ao banco de dados local), essa diferença também é salva pelo experimento. 
 
 \section{Detalhes de Implementação}
 
@@ -178,15 +178,14 @@ Um outro pequeno detalhe de implementação é que apenas o cliente administrado
 O tamanho máximo de buffer adotado é de um milhão de caracteres; o tamanho máximo das consultas são 150 caracteres.
 
 
-\section{Análise dos Resultados}
+\section{Análise dos Resultados e Comparações}
 
 Toda a comunicação foi feita em LAN, com cliente e servidor conectados a um roteador D-Link DIR-600 por Wi-fi.
 
-\subsection{Tempo total de Comunicação}
-
+\subsection{Tempo Total de Comunicação}
 Em todos os resultados dos tempos médios utilizamos um intervalo de confiança com nível de confiança de 95\%, obtido a partir da soma ou subtração de dois desvios padrão.
 
-Temos nesta seção temos os resultados dos experimentos usando o protocolo UDP; temos também os resultados para os mesmos experimentos usando TCP, de um relatório feito anteriormente, e esses dados serão comparados.
+Temos nesta seção os resultados dos experimentos usando o protocolo UDP; temos também os resultados para os mesmos experimentos usando TCP, de um relatório feito anteriormente, e esses dados serão comparados.
     
 Primeiramente geramos um gráfico com o tempo total de conexão com o servidor para cada uma das operações. O resultado segue demonstrado na Tabela~\ref{table:totalU} e na Figura~\ref{fig:totalU}.
 
@@ -242,7 +241,7 @@ Os resultados que obtivemos para o tempo total de conexão dependem bastante das
 
 Com isso em mente, os resultados foram como esperado. Observe que tanto no TCP quanto no UDP as operações de escrita notoriamente tomam mais tempo que as outras. É notável também que as operações grandes levam um pouco mais de tempo que as pequenas - mas ainda têm tempos bem inferiores às de escrita.
 
-O fato a se notar, entretanto, é a escala vertical dos gráficos: embora eles sejam parecidos, em todas as operações o TCP tomou mais tempo que o UDP. Em todos os experimentos realizados, essa afirmação mostrou-se verdadeira.
+O fato a se notar, entretanto, é a escala vertical dos gráficos: embora eles sejam parecidos, em todas as operações o TCP tomou mais tempo que o UDP. Em todos os experimentos realizados, essa afirmação mostrou-se verdadeira, com o tempo de comunicação via UDP sendo cerca de 10 vezes menor que via TCP.
 
 \subsection{Tempo de Transmissão}
 
@@ -301,27 +300,29 @@ Operação & Tempo Médio de Transmissão (\SI{}{\milli\second}) & Intervalo de 
 \end{figure}
 
 \subsection{Tamanho de Código}
-As operações de redes são, na verdade, parte pequena do código total da aplicação. No servidor, a parte mais extensa do código são claramente as operações de consulta {\it MySQL}. No cliente, além das operações de banco de dados, há dezenas de linhas voltadas apenas para a saída na tela dos {\it prompts} ou a escrita em arquivo.
+As operações de redes são, na verdade, parte pequena do código total da aplicação em ambos os protocolos. No servidor dos dois protocolos, a parte mais extensa do código são claramente as operações de consulta {\it MySQL}. No cliente, além das operações de banco de dados, há dezenas de linhas voltadas apenas para a saída na tela dos {\it prompts} ou a escrita em arquivo.
 
 As operações de redes, mesmo no servidor que faz algumas operações a mais que o cliente, representam muito pouco do código. Considerando-se o servidor, as operações de redes mais os seus testes de erros somam 51 linhas, enquanto o arquivo todo tem 191 (correspondem a cerca de 26\%). Para o cliente, as operações de redes representam 31 de um total de 342 linhas (cerca de 9\%). 
 
 \subsection{Confiabilidade}
 
-Como o protocolo escolhido foi o TCP, que garante confiabilidade na transmissão de mensagens, a confiabilidade esperada era de 100\%. De fato, todas as consultas feitas foram exatamente iguais às geradas localmente para contra-prova, comprovando experimentalmente a confiabilidade do protocolo.
+Como o protocolo escolhido neste projeto foi o UDP, que não garante confiabilidade na transmissão de mensagens, esperávamos que algumas mensagens se perdessem na transmissão. Mas constatamos em nossos teste que nenhuma perda aconteceu, todas as mensagens chegaram corretamente. Acreditamos que este fato ocorreu por termos usado uma rede sem muita latência e a uma distância pequena do roteador, garantindo que as mensagens chegassem corretamente sem que o protocolo tivesse que se preocupar com a confiabilidade.
+
+O mesmo teste realizado com o protocolo TCP, em um projeto passado, também resultou em uma confiabilidade de 100\% como esperado, visto que isto é garantido por este protocolo. De fato, todas as consultas feitas foram exatamente iguais às geradas localmente para contra-prova, comprovando experimentalmente a confiabilidade deste protocolo.
 
 \subsection{Nível de Abstração}
 
-As operações de redes fornecidas pelo sistema são bastante abstratas, apesar de algumas exigirem o entendimento de ponteiros e espaços de memória, meros detalhes da linguagem C. O "diálogo" entre cliente e servidor é resolvido com mensagens, e as operações são tão abstratas quanto imaginamos: baseiam-se em processos de envio ({\it send()} e {\it recv()}). Mesmo operações exclusivas a servidores, como {\it bind()} e {\it listen()}, embora não sejam tão instintivas, uma vez entendido o protocolo, fazem sentido e tem boa abstração. 
+As operações de redes fornecidas pelo sistema para o protocolo UDP são bastante abstratas, apesar de algumas exigirem o entendimento de ponteiros e espaços de memória, meros detalhes da linguagem C. O "diálogo" entre cliente e servidor é resolvido com mensagens, e as operações são tão abstratas quanto imaginamos: baseiam-se em processos de envio ({\it sendto()} e {\it recvfrom()}). Mesmo operações exclusivas a servidores, como {\it bind()} e {\it listen()}, embora não sejam tão instintivas, uma vez entendido o protocolo, fazem sentido e tem boa abstração. O mesmo nível de abstração foi constatado em um trabalho utilizando protocolo TCP, no qual apenas as funções de envio e recebimento são diferentes.
 
 Em suma, é possível perceber que toda a complexidade do protocolo está escondida atrás de operações simples.
 
 \section{Conclusões}
 
-No sistema cliente-servidor implementado neste projeto a informação que o servidor retém é a do seu banco de dados e todas as mensagens se baseiam em consultas {\it MySQL}. O tempo total está totalmente influenciado pelo tempo de acesso ao banco, como fica visível na operação de escrita.
+No sistema cliente-servidor implementado neste projeto a informação que o servidor retém é a do seu banco de dados e todas as mensagens se baseiam em consultas {\it MySQL}. O tempo total está totalmente influenciado pelo tempo de acesso ao banco, como fica visível na operação de escrita, mas o tempo de transmissão é proporcional ao tamanho das mensagens, como esperado.
 
 Devido a característica desta aplicação apenas uma pequena parte do código do sistema realiza as operações de redes. Apesar disso, essas operações são carregadas pela sua abstração, onde toda a complexidade esta embutida apenas em um comando básico. A abstração condiz com o tempo de execução dessas operações, medidos no tempo de transmissão, que equivale a menos de um quarto do tempo total na maioria das operações.
 
-A confiabilidade garantida pelo protocolo TCP utilizado na comunicação do sistema foi comprovada em todas as consultas. Um futuro trabalho será comparar esses resultados com um sistema que utiliza o protocolo UDP, onde a confiabilidade pode não ser tão perfeita.
+Apesar do protocolo UDP utilizado na comunicação do sistema não garantir confiabilidade, nenhuma consulta se perdeu em nossos testes e todas as mensagens chegaram na ordem que foram enviadas. Essa confiabilidade também foi comprovada em um trabalho anterior que utilizou o TCP como protocolo de comunicação, o qual por sua vez já garantia essa confiabilidade. Portanto, a grande diferença que constatamos entre os dois protocolos no nosso teste foi o tempo de comunicação, que no UDP foi cerca de 10 vezes menor que no TCP, diferença que atribuímos a falta de conexão do primeiro protocolo.
 
 \addcontentsline{toc}{section}{\protect\numberline{}Referências}
 
