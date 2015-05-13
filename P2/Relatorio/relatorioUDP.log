@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.22)  10 MAY 2015 21:49
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.22)  13 MAY 2015 13:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1361,12 +1361,12 @@ line 297.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [9 <./diagrama/resultadosTempoTotal.png (PNG copy)>] [10] [11 <./diagrama/resul
-tadosTempoTransmissaoUDP.png (PNG copy)>] (./relatorioUDP.bbl [12 <./diagrama/r
-esultadosTempoTransmissao.png (PNG copy)>]) [13] (./relatorioUDP.aux) ) 
+tadosTempoTransmissaoUDP.png (PNG copy)>] [12 <./diagrama/resultadosTempoTransm
+issao.png (PNG copy)>] (./relatorioUDP.bbl) [13] (./relatorioUDP.aux) ) 
 Here is how much of TeX's memory you used:
  13212 strings out of 494963
  258660 string characters out of 6179647
- 283423 words of memory out of 5000000
+ 282423 words of memory out of 5000000
  16121 multiletter control sequences out of 15000+600000
  72181 words of font info for 71 fonts, out of 8000000 for 9000
  42 hyphenation exceptions out of 8191
@@ -1380,7 +1380,7 @@ pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/texmf/fonts/
 type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></u
 sr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/p
 ublic/lm/lmri12.pfb>
-Output written on relatorioUDP.pdf (14 pages, 316413 bytes).
+Output written on relatorioUDP.pdf (14 pages, 316955 bytes).
 PDF statistics:
  92 PDF objects out of 1000 (max. 8388607)
  62 compressed objects within 1 object stream

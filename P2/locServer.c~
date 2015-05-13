@@ -79,6 +79,7 @@ void deal_with_query (int sockfd){
 			perror("recvfrom");
 			exit(1);
 		}
+		printf("Passou do recv\n");
 		tempo();
 		int qError = 0;
 		buf[numbytes] = 0;

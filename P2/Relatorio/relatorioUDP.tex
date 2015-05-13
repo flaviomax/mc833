@@ -302,7 +302,9 @@ Operação & Tempo Médio de Transmissão (\SI{}{\milli\second}) & Intervalo de 
 \subsection{Tamanho de Código}
 As operações de redes são, na verdade, parte pequena do código total da aplicação em ambos os protocolos. No servidor dos dois protocolos, a parte mais extensa do código são claramente as operações de consulta {\it MySQL}. No cliente, além das operações de banco de dados, há dezenas de linhas voltadas apenas para a saída na tela dos {\it prompts} ou a escrita em arquivo.
 
-As operações de redes, mesmo no servidor que faz algumas operações a mais que o cliente, representam muito pouco do código. Considerando-se o servidor, as operações de redes mais os seus testes de erros somam 51 linhas, enquanto o arquivo todo tem 191 (correspondem a cerca de 26\%). Para o cliente, as operações de redes representam 31 de um total de 342 linhas (cerca de 9\%). 
+Para a comunicação TCP, temos que as operações de redes, mesmo no servidor (que faz algumas operações a mais que o cliente), representam muito pouco do código. Considerando-se o servidor, as operações de redes mais os seus testes de erros somam 51 linhas, enquanto o arquivo todo tem 191 (correspondem a cerca de 26\%). Para o cliente, as operações de redes representam 31 de um total de 342 linhas (cerca de 9\%).
+
+Na comunicação UDP, cliente e servidor fazem aproximadamente o mesmo número de operações de redes; o cliente usa 36 linhas de suas 354 (cerca de 10\%) e o servidor 50 de 184 (cerca de 27\%). Note que o número de linhas utilizadas no servidor foi praticamente a mesma do TCP (mesmo não fazendo {\it accept}() ou {\it listen}(), o tratamento das informações recebidas com {\it recvfrom}() e {\it sendto}() compensou esse número). No cliente, houve um leve aumento no número de linhas dedicadas a redes, devido ao {\it select}().
 
 \subsection{Confiabilidade}
 
