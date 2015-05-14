@@ -1,6 +1,6 @@
 \select@language {brazil}
 \contentsline {section}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{2}
-\contentsline {section}{\numberline {2}Descri\IeC {\c c}\IeC {\~a}o Geral do Sistema}{2}
+\contentsline {section}{\numberline {2}Descri\IeC {\c c}\IeC {\~a}o Geral do Sistema}{3}
 \contentsline {section}{\numberline {3}Armazenamento e Estruturas de Dados}{4}
 \contentsline {section}{\numberline {4}Detalhes de Implementa\IeC {\c c}\IeC {\~a}o}{4}
 \contentsline {section}{\numberline {5}An\IeC {\'a}lise dos Resultados e Compara\IeC {\c c}\IeC {\~o}es}{6}

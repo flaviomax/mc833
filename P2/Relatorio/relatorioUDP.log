@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.22)  13 MAY 2015 13:50
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.8.9)  13 MAY 2015 22:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1304,18 +1304,15 @@ File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
 ] [2
 
-] [3] [4] [5]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<diagrama/resultadosTempoTotalUDP.png, id=29, 963.6pt x 642.4pt>
+] [3] [4] [5] [6]
+<diagrama/resultadosTempoTotalUDP.png, id=34, 963.6pt x 642.4pt>
 File: diagrama/resultadosTempoTotalUDP.png Graphic file (type png)
 
 <use diagrama/resultadosTempoTotalUDP.png>
 Package pdftex.def Info: diagrama/resultadosTempoTotalUDP.png used on input lin
 e 212.
 (pdftex.def)             Requested size: 455.24411pt x 303.4964pt.
- [6]
+
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -1364,10 +1361,10 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 tadosTempoTransmissaoUDP.png (PNG copy)>] [12 <./diagrama/resultadosTempoTransm
 issao.png (PNG copy)>] (./relatorioUDP.bbl) [13] (./relatorioUDP.aux) ) 
 Here is how much of TeX's memory you used:
- 13212 strings out of 494963
- 258660 string characters out of 6179647
- 282423 words of memory out of 5000000
- 16121 multiletter control sequences out of 15000+600000
+ 13214 strings out of 494963
+ 258692 string characters out of 6179648
+ 283423 words of memory out of 5000000
+ 16123 multiletter control sequences out of 15000+600000
  72181 words of font info for 71 fonts, out of 8000000 for 9000
  42 hyphenation exceptions out of 8191
  39i,11n,45p,10404b,950s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1380,7 +1377,7 @@ pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/texmf/fonts/
 type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></u
 sr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/p
 ublic/lm/lmri12.pfb>
-Output written on relatorioUDP.pdf (14 pages, 316955 bytes).
+Output written on relatorioUDP.pdf (14 pages, 316945 bytes).
 PDF statistics:
  92 PDF objects out of 1000 (max. 8388607)
  62 compressed objects within 1 object stream

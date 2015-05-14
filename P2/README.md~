@@ -1,6 +1,6 @@
-# MC833 Projeto 2
+# MC833 Projeto 1
 
-Comunicação UDP entre cliente e servidor sobre um banco de dados de uma locadora filmes.
+Comunicação TCP entre cliente e servidor sobre um banco de dados de uma locadora filmes.
 
 Os programas guardam os dados em um BD mySQL, portanto suas dependências devem estar instaladas nas máquinas.
 
@@ -8,8 +8,6 @@ Requisitos:
 
 1 - libmysqlclient-dev
 
-
-- O banco de dados deve ser populado com as queries no arquivo dump.
 
 COMO COMPILAR:
 
