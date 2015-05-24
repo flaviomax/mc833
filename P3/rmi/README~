@@ -1,8 +1,0 @@
-COMO EXECUTAR
-
-- Tenha o Apache2 instalado e libere a pagina public_html, desta forma:
-	Segui o tutorial em http://joao.machado-family.com/2013/06/04/ubuntu-13-04-apache2-setup-public_html/
-	até a parte que dá o comando $ sudo adduser $USER www-data
-	Depois disso segui o tutorial em https://bigbrovar.wordpress.com/2009/02/13/configure-apache-and-public_html-on-ubuntu/
-	mas sem baixar esse tasksel.
-
