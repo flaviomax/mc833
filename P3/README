@@ -7,7 +7,7 @@ COMO EXECUTAR
 	mas sem baixar esse tasksel.
 
 Aí no server:
-$ java -cp ~/UNICAMP/MC833/Projetos/P3/rmi:~/public_html/classes/compute.jar -Djava.rmi.server.codebase=http://localhost/~$USER/classes/compute.jar -Djava.security.policy=server.policy engine.ComputeEngine
+$ java -cp ~/Documents/UNICAMP/MC833/Projetos/P3/rmi:~/public_html/classes/compute.jar -Djava.rmi.server.codebase=http://localhost/~$USER/classes/compute.jar -Djava.security.policy=server.policy engine.ComputeEngine
 
 E no cliente
-$ java -cp ~/UNICAMP/MC833/Projetos/P3/rmi:~/public_html/classes/compute.jar -Djava.rmi.server.codebase=http://localhost/~$USER/classes/ -Djava.security.policy=client.policy client.ComputePi localhost 45
+$ java -cp ~/Documents/UNICAMP/MC833/Projetos/P3/rmi:~/public_html/classes/compute.jar -Djava.rmi.server.codebase=http://localhost/~$USER/classes/ -Djava.security.policy=client.policy client.ComputePi localhost 45
