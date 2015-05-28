@@ -1,0 +1,3 @@
+grant codeBase "file:~/UNICAMP/MC833/rmi/" {
+    permission java.security.AllPermission;
+};
