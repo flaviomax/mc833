@@ -1,0 +1,3 @@
+grant codeBase "file:/home/flavio/UNICAMP/MC833/rmiEcho/" {
+    permission java.security.AllPermission;
+};
