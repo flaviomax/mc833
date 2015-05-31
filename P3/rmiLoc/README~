@@ -1,0 +1,19 @@
+COMO EXECUTAR
+
+- Tenha o Apache2 instalado e libere a pagina public_html, desta forma:
+	Segui o tutorial em http://joao.machado-family.com/2013/06/04/ubuntu-13-04-apache2-setup-public_html/
+	até a parte que dá o comando $ sudo adduser $USER www-data
+	Depois disso segui o tutorial em https://bigbrovar.wordpress.com/2009/02/13/configure-apache-and-public_html-on-ubuntu/
+	mas sem baixar esse tasksel.
+	
+Compilar server
+javac -cp /home/flavio/UNICAMP/MC833/rmiLoc:/home/flavio/UNICAMP/MC833/rmiLoc/mysql-connector-java-5.1.9.jar:/home/flavio/public_html/classes2/compute.jar engine/ComputeEngine.java
+
+Executar server:
+$ java -cp /home/flavio/UNICAMP/MC833/rmiLoc:/home/flavio/UNICAMP/MC833/rmiLoc/mysql-connector-java-5.1.9.jar:/home/flavio/public_html/classes2/compute.jar -Djava.rmi.server.codebase=http://localhost/~flavio/classes2/compute.jar -Djava.security.policy=server.policy engine.ComputeEngine
+
+Compilar cliente
+$ javac -cp /home/flavio/public_html/classes2/compute.jar client/locClient.java
+
+Rodar:
+$ java -cp /home/flavio/UNICAMP/MC833/rmiLoc:/home/flavio/public_html/classes2/compute.jar -Djava.security.policy=client.policy client.echoClient localhost
