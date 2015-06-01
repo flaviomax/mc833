@@ -36,6 +36,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
+import java.io.FileWriter;
 import compute.Compute;
 
 public class ComputeEngine implements Compute {
@@ -46,8 +47,14 @@ public class ComputeEngine implements Compute {
 
     public String executeTask(String query) {
 		try{
-			//System.out.println(query);
-			return connectToAndQueryDatabase("root", "crislinda", query);
+			long before = System.nanoTime();
+			String result = connectToAndQueryDatabase("root", "crislinda", query);
+			String filename= "serverTime.txt";
+			FileWriter fw = new FileWriter(filename,true); //the true will append the new data
+			long after = System.nanoTime();
+			fw.write((after-before) + "\n");//appends the string to the file
+			fw.close();
+			return result;
 		}
 		catch (Exception e) {
 			e.printStackTrace();

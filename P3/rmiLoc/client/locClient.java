@@ -53,13 +53,13 @@ public class locClient {
             int modo = select_modo();
             if (modo == 1){
 				long before = System.nanoTime();
-				String resultado = comp.executeTask(query);
+				String resultado = comp.executeTask(query); // modo teste nao salva arquivo no servidor
 				long after = System.nanoTime();
 				System.out.println(resultado);
 				System.out.println("Tempo de comunicacao: " + (after-before) + " ns");
 			}
 			else {
-				PrintWriter writer = new PrintWriter ("clientResult.txt", "UTF-8");
+				PrintWriter writer = new PrintWriter ("clientTime.txt", "UTF-8");
 				for (int i = 0; i < 30; i++){
 					long before = System.nanoTime();
 					String resultado = comp.executeTask(query);
