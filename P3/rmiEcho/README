@@ -7,13 +7,13 @@ COMO EXECUTAR
 	mas sem baixar esse tasksel.
 	
 Compilar server
-javac -cp /home/flavio/UNICAMP/MC833/rmiEcho:/home/flavio/UNICAMP/MC833/rmiEcho/mysql-connector-java-5.1.9.jar:/home/flavio/public_html/classes2/compute.jar engine/ComputeEngine.java
+javac -cp /home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiEcho/:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiEcho/mysql-connector-java-5.0.8/mysql-connector-java-5.0.8-bin.jar:/home/cristina/public_html/classes2/compute.jar engine/ComputeEngine.java
 
 Executar server:
-$ java -cp /home/flavio/UNICAMP/MC833/rmiEcho:/home/flavio/UNICAMP/MC833/rmiEcho/mysql-connector-java-5.1.9.jar:/home/flavio/public_html/classes2/compute.jar -Djava.rmi.server.codebase=http://localhost/~flavio/classes2/compute.jar -Djava.security.policy=server.policy engine.ComputeEngine
+$ java -cp /home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiEcho/:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiEcho/mysql-connector-java-5.0.8/mysql-connector-java-5.0.8-bin.jar:/home/cristina/public_html/classes2/compute.jar -Djava.rmi.server.codebase=http://localhost/~cristina/classes2/compute.jar -Djava.security.policy=server.policy engine.ComputeEngine
 
 Compilar cliente
-$ javac -cp /home/flavio/public_html/classes2/compute.jar client/echoClient.java
+$ javac -cp /home/cristina/public_html/classes2/compute.jar client/echoClient.java
 
 Rodar:
-$ java -cp /home/flavio/UNICAMP/MC833/rmiEcho:/home/flavio/public_html/classes2/compute.jar -Djava.security.policy=client.policy client.echoClient localhost
+$ java -cp /home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiEcho:/home/cristina/public_html/classes2/compute.jar -Djava.security.policy=client.policy client.echoClient localhost

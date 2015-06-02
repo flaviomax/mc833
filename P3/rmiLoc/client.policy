@@ -1,3 +1,3 @@
-grant codeBase "file:/home/flavio/UNICAMP/MC833/rmiLoc/" {
+grant codeBase "file:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc/" {
     permission java.security.AllPermission;
 };

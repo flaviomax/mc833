@@ -1,3 +1,7 @@
-grant codeBase "file:/home/flavio/UNICAMP/MC833/rmiEcho/" {
+grant codeBase "file:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiEcho/" {
+    permission java.security.AllPermission;
+};
+
+grant codeBase "file:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiEcho/mysql-connector-java-5.0.8/mysql-connector-java-5.0.8-bin.jar" {
     permission java.security.AllPermission;
 };

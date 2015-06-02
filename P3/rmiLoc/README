@@ -5,15 +5,24 @@ COMO EXECUTAR
 	até a parte que dá o comando $ sudo adduser $USER www-data
 	Depois disso segui o tutorial em https://bigbrovar.wordpress.com/2009/02/13/configure-apache-and-public_html-on-ubuntu/
 	mas sem baixar esse tasksel.
-	
+
+Gerar compute.jar:
+$ javac compute/Compute.java
+$ jar cvf compute.jar compute/*.class
+$ cp compute.jar /home/cristina/public_html/classes2/
+
+
 Compilar server
-javac -cp /home/flavio/UNICAMP/MC833/rmiLoc:/home/flavio/UNICAMP/MC833/rmiLoc/mysql-connector-java-5.1.9.jar:/home/flavio/public_html/classes2/compute.jar engine/ComputeEngine.java
+$ javac -cp /home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc/mysql-connector-java-5.1.9.jar:/home/cristina/public_html/classes2/compute.jar engine/ComputeEngine.java
+
+Iniciar RMI registry.
+$ rmiregistry &
 
 Executar server:
-$ java -cp /home/flavio/UNICAMP/MC833/rmiLoc:/home/flavio/UNICAMP/MC833/rmiLoc/mysql-connector-java-5.1.9.jar:/home/flavio/public_html/classes2/compute.jar -Djava.rmi.server.codebase=http://localhost/~flavio/classes2/compute.jar -Djava.security.policy=server.policy engine.ComputeEngine
+$ java -cp /home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc/mysql-connector-java-5.1.9.jar:/home/cristina/public_html/classes2/compute.jar -Djava.rmi.server.codebase=http://localhost/~cristina/classes2/compute.jar -Djava.security.policy=server.policy engine.ComputeEngine
 
 Compilar cliente
-$ javac -cp /home/flavio/public_html/classes2/compute.jar client/locClient.java
+$ javac -cp /home/cristina/public_html/classes2/compute.jar client/locClient.java
 
 Rodar:
-$ java -cp /home/flavio/UNICAMP/MC833/rmiLoc:/home/flavio/public_html/classes2/compute.jar -Djava.security.policy=client.policy client.locClient localhost
+$ java -cp /home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc:/home/cristina/public_html/classes2/compute.jar -Djava.security.policy=client.policy client.locClient localhost

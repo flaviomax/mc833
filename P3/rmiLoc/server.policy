@@ -1,7 +1,7 @@
-grant codeBase "file:/home/flavio/UNICAMP/MC833/rmiLoc/" {
+grant codeBase "file:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc/" {
     permission java.security.AllPermission;
 };
 
-grant codeBase "file:/home/flavio/UNICAMP/MC833/rmiLoc/mysql-connector-java-5.1.9.jar" {
+grant codeBase "file:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc/mysql-connector-java-5.1.9.jar" {
     permission java.security.AllPermission;
 };
