@@ -19,7 +19,7 @@ Iniciar RMI registry.
 $ rmiregistry &
 
 Executar server:
-$ java -cp /home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc/mysql-connector-java-5.1.9.jar:/home/cristina/public_html/classes2/compute.jar -Djava.rmi.server.codebase=http://localhost/~cristina/classes2/compute.jar -Djava.security.policy=server.policy engine.ComputeEngine
+$ java -cp /home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc:/home/cristina/Documents/UNICAMP/MC833/Projetos/P3/rmiLoc/mysql-connector-java-5.1.9.jar:/home/cristina/public_html/classes2/compute.jar -Djava.rmi.server.codebase=http://localhost/~cristina/classes2/compute.jar -Djava.rmi.server.hostname=192.168.0.4 -Djava.security.policy=server.policy engine.ComputeEngine
 
 Compilar cliente
 $ javac -cp /home/cristina/public_html/classes2/compute.jar client/locClient.java
