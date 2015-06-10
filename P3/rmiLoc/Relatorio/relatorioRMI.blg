@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: relatorioRMI.aux
+The style file: unsrt.bst
+Database file #1: relatorioRMI.bib
+Warning--entry type for "RMITutorial" isn't style-file defined
+--line 29 of file relatorioRMI.bib
+Warning--entry type for "IMDbsite" isn't style-file defined
+--line 43 of file relatorioRMI.bib
+Warning--empty journal in postel1981transmission
+You've used 5 entries,
+            1791 wiz_defined-function locations,
+            467 strings with 3933 characters,
+and the built_in function-call counts, 676 in all, are:
+= -- 50
+> -- 20
+< -- 0
++ -- 10
+- -- 5
+* -- 13
+:= -- 112
+add.period$ -- 13
+call.type$ -- 5
+change.case$ -- 3
+chr.to.int$ -- 0
+cite$ -- 6
+duplicate$ -- 38
+empty$ -- 89
+format.name$ -- 5
+if$ -- 154
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 5
+newline$ -- 26
+num.names$ -- 5
+pop$ -- 33
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 15
+stack$ -- 0
+substring$ -- 0
+swap$ -- 4
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 1
+while$ -- 5
+width$ -- 6
+write$ -- 47
+(There were 3 warnings)
