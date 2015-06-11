@@ -156,6 +156,8 @@ Tanto o cliente quanto a servidor foram implementados baseando-se nas descriçõ
 
 Por esse motivo, optamos por manter apenas as operações do servidor em sua pasta pública. Além disso, como no nosso sistema apenas strings são enviadas e recebidas, pudemos remover totalmente a classe {\it Task.java} e tornar a interface {\it Compute.java} menos robusta: agora, ele recebe uma string como parâmetro (a query SQL) e retorna outra string (o resultado da operação).
 
+Essa interface é acessível no servidor utilizando um servidor Apache, de forma a tornar público o conteúdo do diretório {\it public\_html}. A interface contida em {\it compute.jar} fica disponível nesse diretório.
+
 O servidor é iniciado em uma máquina utilizando todas as operações demonstradas no Tutorial~\cite{RMITutorial}. Como especificado, sua interface RMI é apenas a função Compute (que recebe uma query SQL), cuja função é executar a query no banco de dados de filmes e retornar os resultados.
 
 O cliente, a cada vez que é iniciado, joga na tela um {\it prompt} com as opções de requisição ao servidor. Em seguida, após escolhida a opção, o cliente dá a opção de fazer o acesso apenas uma vez (para verificar a corretude da aplicação) ou trinta vezes. Se o usuário escolher por fazer o acesso apenas uma vez, o resultado da consulta é exibido na tela do cliente. Se escolher por fazer a consulta trinta vezes, um arquivo de {\it log} de respostas é criado na mesma pasta do cliente, com o nome {\it clientTime.txt}.
@@ -164,7 +166,7 @@ A consulta é feita ao servidor pelo meio de envio de consultas {\it MySQL}, que
 
 Esse arquivo de {\it log} gerado tem o seguinte formato: são trinta linhas e uma coluna, onde cada linha representa um dos testes. Os valores numéricos são os tempos, em nanossegundos, de cada chamada à função Compute pelo cliente.
 
-O servidor também concatena a um arquivo de {\it log} dados sobre cada conexão que coordena. Como o servidor concatena informações num mesmo arquivo, quando o cliente fizer, por exemplo, trinta consultas de títulos de filmes, as últimas trinta entradas desse {\it log} do servidor guardarão os dados sobre essas consultas. Cada entrada nesse {\it log} é um {\it inteiro} que guarda o tempo de acesso do servidor ao banco de dados; esse tempo é o intervalo desde o início da execução da função Compute até imediatamente antes de seu retorno. Dessa forma, podemos aproximar o tempo de transmissão das mensagens: usando o tempo $ tServer $ desse {\it log} do servidor e a segunda coluna do {\it log} do cliente ($ tClient $), o tempo de transmissão de uma mensagem ao outro será, aproximadamente, dado por:
+O servidor também concatena a um arquivo de {\it log} dados sobre cada conexão que coordena. Como o servidor concatena informações num mesmo arquivo, quando o cliente fizer, por exemplo, trinta consultas de títulos de filmes, as últimas trinta entradas desse {\it log} do servidor guardarão os dados sobre essas consultas. Cada entrada nesse {\it log} é um {\it inteiro} que guarda o tempo de acesso do servidor ao banco de dados; esse tempo é o intervalo desde o início da execução da função Compute até imediatamente antes de seu retorno. Dessa forma, podemos aproximar o tempo de transmissão das mensagens: usando o tempo $ tServer $ desse {\it log} do servidor e a o valor correspondente do {\it log} do cliente ($ tClient $), o tempo de transmissão de uma mensagem ao outro será, aproximadamente, dado por:
 \begin{equation}
 {\text {Tempo de Transmissão}} = \frac{tClient - tServer}{2}
 \label{eqn:time}
@@ -181,11 +183,11 @@ Em todos os resultados dos tempos médios utilizamos um intervalo de confiança 
 
 Temos nesta seção os resultados dos experimentos usando o protocolo RMI; temos também os resultados para os mesmos experimentos usando TCP, de um relatório feito anteriormente, e esses dados serão comparados.
     
-Primeiramente geramos um gráfico com o tempo total de conexão com o servidor para cada uma das operações. O resultado segue demonstrado na Tabela~\ref{table:totalR} e na Figura~\ref{fig:totalR}.
+Primeiramente geramos um gráfico com o tempo total de conexão com o servidor para cada uma das operações, utilizando RMI. O resultado segue demonstrado na Tabela~\ref{table:totalR} e na Figura~\ref{fig:totalR}.
 
 \begin{table}[h]
 \centering
-\caption{Tabela mostrando o tempo médio e intervalo de confiança para cada uma das sete operações, na ordem em que foram descritas, para o protocolo RMI. Tempo calculado no cliente, entre a execução da {\it task}.}
+\caption{Tabela mostrando o tempo médio e intervalo de confiança para cada uma das sete operações, na ordem em que foram descritas, para o protocolo RMI. Tempo calculado no cliente, durante a execução da {\it task}.}
 \label{table:totalR}
 \begin{tabular}{lll}
 Operação & Tempo Médio Total (\SI{}{\milli\second})  & Intervalo de Confiança (\SI{}{\milli\second})           \\
@@ -237,7 +239,7 @@ Com isso em mente, os resultados foram neste sentido como esperado. Observe que 
 
 O fato a se notar, entretanto, é a escala vertical dos gráficos: embora eles sejam parecidos, em todas as operações o TCP tomou mais tempo que o RMI. Em todos os experimentos realizados, essa afirmação mostrou-se verdadeira, com o tempo de comunicação via RMI sendo cerca de 2 vezes menor que via TCP. 
 
-Entretando, era esperado que o RMI fosse mais lento que o TCP puro, uma vez que ele roda em cima do TCP (e de HTTP), escondendo sua complexidade. Acreditamos que este fato tenha ocorrido por causa das diferenças nas linguagens utilizadas nos dois projetos. Enquanto o RMI é implementado em Java, que possui um ótimo suporte para JDBC, o TCP foi implementado na linguagem C, sem o mínimo de suporte à Banco de Dados, e portanto, acreditamos que o acesso ao banco foi um gargalo bem maior no projeto com o TCP.
+Era esperado, entretanto, que o RMI fosse mais lento que o TCP puro, dado que ele roda sobre o TCP, escondendo sua complexidade. Acreditamos que este fato tenha ocorrido por causa das diferenças nas linguagens utilizadas nos dois projetos. Enquanto o RMI é implementado em Java, que possui um ótimo suporte para JDBC, o TCP foi implementado na linguagem C, sem o mínimo de suporte à Banco de Dados, e portanto, acreditamos que o acesso ao banco foi um gargalo bem maior no projeto com o TCP.
 
 \subsection{Tempo de Transmissão}
 
@@ -261,9 +263,9 @@ Operação & Tempo Médio de Transmissão (\SI{}{\milli\second}) & Intervalo de 
 
 Os tempos de transmissão medem o tempo de comunicação entre o cliente e o servidor. Esse tempo deve depender apenas do tamanho das mensagens, que como já especificado, corresponde apenas a um pacote nas operações pequenas e de escrita e de vários pacotes nas operações grandes. 
 
-Os tempo obtidos para as operações pequenas e grandes condizem com essa expectativa, tanto no TCP quanto no RMI; no TCP as operações de escrita em alguns experimentos tiveram tempos de transmissão muito maiores (observe o alto desvio): acreditamos que isso se deva às aproximações no cálculo do tempo de transmissão. Para o RMI também podemos observar que as operações de escrita estão acima das demais, um resultado condizente, uma vez que ele roda em cima do TCP; operações grandes precisaram de um intervalo de tempo um pouco maior para serem transmitidas.
+Os tempo obtidos para as operações pequenas e grandes condizem com essa expectativa, tanto no TCP quanto no RMI; no TCP as operações de escrita em alguns experimentos tiveram tempos de transmissão muito maiores (observe o alto desvio): acreditamos que isso se deva às aproximações no cálculo do tempo de transmissão. Para o RMI também podemos observar que as operações de escrita estão acima das demais, um resultado condizente, dado que a aproximação está enviesada pelo tempo do banco de dados; operações grandes precisaram de um intervalo de tempo um pouco maior para serem transmitidas.
 
-Note que, diferente do esperado, os tempos de transmissão das mensagens RMI foram muito inferiores aos tempos do TCP;  enquanto uma operação grande demorou cerca de $\SI{10}{\milli\second}$, em média, para ser transmitida no TCP, no RMI levou apenas $\SI{2}{\milli\second}$, em média. Como comentado na seção anterior, atribuímos esse resultado as diferentes linguagens utilizadas.
+Note que, diferente do esperado, os tempos de transmissão das mensagens RMI foram muito inferiores aos tempos do TCP;  enquanto uma operação grande demorou cerca de $\SI{10}{\milli\second}$, em média, para ser transmitida no TCP, no RMI levou apenas $\SI{2}{\milli\second}$, em média. Atribuímos esse resultado às aproximações das medidas; os relógios utilizados são em máquinas diferentes (cliente e servidor). Além disso, no RMI não temos a liberdade de escolher {\it onde} começar a medida de tempo de comunicação (tudo está escondido dentro do protocolo).
 
 \begin{figure}[h]
 \centering
@@ -303,21 +305,23 @@ As operações de redes, mesmo no servidor que faz algumas operações a mais qu
 
 \subsection{Confiabilidade}
 
-Como o protocolo escolhido foi o RMI o qual roda em cima do protocolo TCP, que garante confiabilidade na transmissão de mensagens, fato já comprovado experimentalmente em uma trabalho anterior, podemos afirmar que para esse protocolo a confiabilidade também é de 100\%. 
+Como o protocolo escolhido foi o RMI, o qual roda em cima do protocolo TCP, que garante confiabilidade na transmissão de mensagens, fato já comprovado experimentalmente em uma trabalho anterior, podemos afirmar que para esse protocolo a confiabilidade também é de 100\%. 
 
 \subsection{Nível de Abstração}
 
-As operações de redes fornecidas pelo sistema são bastante abstratas, apesar de algumas exigirem o entendimento de ponteiros e espaços de memória, meros detalhes da linguagem C. O "diálogo" entre cliente e servidor é resolvido com mensagens, e as operações são tão abstratas quanto imaginamos: baseiam-se em processos de envio ({\it send()} e {\it recv()}). Mesmo operações exclusivas a servidores, como {\it bind()} e {\it listen()}, embora não sejam tão instintivas, uma vez entendido o protocolo, fazem sentido e tem boa abstração. 
+Neste caso, o RMI é muito superior ao TCP puro implementado anteriormente. Toda a comunicação fica escondida atrás do protocolo em operações muito simples. No servidor apenas algumas linhas de código são necessárias para iniciar o recebimento de invocações. No cliente, três linhas são suficientes para que o método compute seja usado como método local. É é simples assim: basta usar métodos como se fossem locais, e toda a comunicação é abstraída pelo protocolo.
+
+No TCP puro, embora também houvesse um bom nível de abstração, vários passos eram necessárias para que a comunicação se iniciasse.
 
 Em suma, é possível perceber que toda a complexidade do protocolo está escondida atrás de operações simples.
 
 \section{Conclusões}
 
-No sistema cliente-servidor implementado neste projeto a informação que o servidor retém é a do seu banco de dados e todas as mensagens se baseiam em consultas {\it MySQL}. O tempo total está totalmente influenciado pelo tempo de acesso ao banco, como fica visível na operação de escrita.
+No sistema cliente-servidor implementado neste projeto a informação que o servidor retém é a do seu banco de dados e todas as mensagens se baseiam em consultas {\it MySQL}. O tempo total está totalmente influenciado pelo tempo de acesso ao banco, como fica visível na operação de escrita; acreditamos que, pelo mesmo motivo (o JDBC ser mais adaptado ao MySQL que a API em C), o RMI mostrou melhores tempos de execução.
 
-Devido a característica desta aplicação apenas uma pequena parte do código do sistema realiza as operações de redes. Apesar disso, essas operações são carregadas pela sua abstração, onde toda a complexidade esta embutida apenas em um comando básico. A abstração condiz com o tempo de execução dessas operações, medidos no tempo de transmissão, que equivale a menos de um quarto do tempo total na maioria das operações.
+Uma parte muito pequena do código utiliza realmente operações de rede: a maior parte da comunicação é deita de forma ``escondida'' do usuário, uma abstração muito superior ao TCP puro utilizado anteriormente.
 
-A confiabilidade garantida pelo protocolo TCP utilizado na comunicação do sistema foi comprovada em todas as consultas. Um futuro trabalho será comparar esses resultados com um sistema que utiliza o protocolo UDP, onde a confiabilidade pode não ser tão perfeita.
+A confiabilidade em ambos os protocolos é de 100\% - é uma característica do TCP, protocolo de comunicação sobre o qual funciona o sistema RMI.
 
 \addcontentsline{toc}{section}{\protect\numberline{}Referências}
 
