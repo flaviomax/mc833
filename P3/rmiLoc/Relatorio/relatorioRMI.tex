@@ -73,12 +73,12 @@
 \vspace*{3.5cm}
 
 \begin{center}
-{\Large \bf MC833 - Relatório Científico 1}
+{\Large \bf MC833 - Relatório Científico 3}
 
 \vspace*{2.0cm}
 
 \textsc{\Large Comunicação Cliente-Servidor} \\ [0.1cm]
-\textsc{\Large Usando Protocolo TCP}
+\textsc{\Large Usando Protocolo RMI}
 
 \vspace{2.5cm}
 
@@ -90,7 +90,7 @@
 {\large Campinas - SP}
 \vspace*{0.2cm}
 
-{\large Abril de 2015}
+{\large Junho de 2015}
 \end{center}
 
 \clearpage
@@ -108,7 +108,7 @@ Este trabalho focou-se no estudo temporal de redes cliente-servidor baseadas em 
 \section{Introdução}
 Na Internet, a grande maioria das montagens de comunicação baseia-se em um sistema cliente-servidor. Nesse contexto, o servidor guarda alguma informação que é relevante ao cliente, que pede essa informação através de uma mensagem na rede; o servidor, por sua vez, responde esse pedido com outra(s) mensagem(ns) contendo a informação requisitada.
 
-O método de comunicação escolhido para este projeto é o {\it Remote Method Invocation} (RMI)~\cite{downing1998java, RMITutorial}. Esse método, desenvolvido utilizando a linguagem Java, é baseado em comunicação TCP~\cite{postel1981transmission} (sem perda de pacotes) e baseia-se em um host (o cliente) ser capaz de invocar métodos do outro (servidor) como se fossem métodos locais. Toda a comunicação TCP é feita ``escondida'' pelo sistema.
+O método de comunicação escolhido para este projeto é o {\it Remote Method Invocation} (RMI)~\cite{downing1998java, RMITutorial}. Esse método, desenvolvido utilizando a linguagem Java, é baseado em comunicação TCP~\cite{postel1981transmission} (sem perda de pacotes) e baseia-se em um host (o cliente) ser capaz de invocar métodos do outro (servidor) como se fossem métodos locais. Toda a comunicação TCP é feita ''escondida'' pelo sistema.
 
 Neste trabalho, num primeiro momento, o foco principal de nossa análise será a medida de tempo total de comunicação entre cliente e servidor, além de uma aproximação do tempo de transmissão das mensagens entre os dois (tempo de as mensagens saírem de um host e chegarem ao outro). Faremos também uma comparação desses tempos com os obtidos em um trabalho anterior, no qual estudamos a implementação direta do protocolo TCP em C. O tamanho de código será também analisado, além de um breve parecer sobre o nível de abstração do sistema desenvolvido.
 
@@ -148,7 +148,7 @@ Em um sistema real de cliente-servidor os dados são em sua maioria armazenados 
     
     No acesso ao banco de dados, os clientes podem apenas acessar a informação, enquanto o cliente administrador da locadora pode, além do acesso, alterar a quantidade de exemplares em estoque. Para garantir esse privilégio de acesso, é necessário uma senha para entrar no modo administrador, a qual é processada pelo programa e só após confirmada o acesso diferenciado ao banco pode ocorrer.
     
-Como o RMI utiliza por baixo o protocolo TCP na comunicação Cliente-Servidor não fizemos nenhuma manobra para comprovar sua confiabilidade, umas vez que já comprovamos a confiabilidade do protocolo TCP em um trabalho passado e portanto podemos afirmá-la para o RMI.
+Como o RMI utiliza por baixo o protocolo TCP na comunicação cliente-servidor, não fizemos nenhuma manobra para comprovar sua confiabilidade, umas vez que já comprovamos a confiabilidade do protocolo TCP em um trabalho passado, e portanto, podemos afirmá-la para o RMI.
 
 \section{Detalhes de Implementação}
 
@@ -173,78 +173,137 @@ Um outro pequeno detalhe de implementação é que apenas o cliente administrado
 
 \section{Análise dos Resultados}
 
+Toda a comunicação foi feita em LAN, com cliente e servidor conectados a um roteador D-Link DIR-600 por Wi-fi.
+
 \subsection{Tempo total de Comunicação}
 
 Em todos os resultados dos tempos médios utilizamos um intervalo de confiança com nível de confiança de 95\%, obtido a partir da soma ou subtração de dois desvios padrão.
+
+Temos nesta seção os resultados dos experimentos usando o protocolo RMI; temos também os resultados para os mesmos experimentos usando TCP, de um relatório feito anteriormente, e esses dados serão comparados.
     
-Primeiramente geramos um gráfico com o tempo total de conexão com o servidor para cada uma das operações. O resultado segue demonstrado na Tabela~\ref{table:total} e na Figura~\ref{fig:total}.
+Primeiramente geramos um gráfico com o tempo total de conexão com o servidor para cada uma das operações. O resultado segue demonstrado na Tabela~\ref{table:totalR} e na Figura~\ref{fig:totalR}.
 
 \begin{table}[h]
 \centering
-\caption{Tabela mostrando o tempo médio e intervalo de confiança para cada uma das sete operações, na ordem em que foram descritas. Tempo calculado no cliente, desde a abertura até o fechamento da conexão usando RMI.}
-\label{table:total}
+\caption{Tabela mostrando o tempo médio e intervalo de confiança para cada uma das sete operações, na ordem em que foram descritas, para o protocolo RMI. Tempo calculado no cliente, entre a execução da {\it task}.}
+\label{table:totalR}
 \begin{tabular}{lll}
-Operação & Tempo Total de Comunicação (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second}) \\ \hline
-1        & 14.66019          & 5.715058      \\
-2        & 19.90590          & 47.649582  	 \\
-3        & 12.63895          & 7.884285  	 \\
-4        & 13.66040          & 4.993054   	 \\
-5        & 18.04669          & 7.716191   	  \\
-6        & 72.64021          & 127.971248 	 \\
-7        & 13.09539          & 7.597693   	
+Operação & Tempo Médio Total (\SI{}{\milli\second})  & Intervalo de Confiança (\SI{}{\milli\second})           \\
+1        & 14.66019          & 5.715058    \\
+2        & 19.90590          & 47.649582   \\
+3        & 12.63895          & 7.884285    \\
+4        & 13.66040          & 4.993054    \\
+5        & 18.04669          & 7.716191     \\
+6        & 72.64021          & 127.971248  \\
+7        & 13.09539          & 7.597693   
 \end{tabular}
 \end{table}
+
+Observe também na Tabela~\ref{table:totalT} e na Figura~\ref{fig:totalT} os resultados de tempo total de conexão, desde o {\it connect}() até o {\it close}(), para o protocolo TCP, para os mesmos experimentos.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{resultadosTempoTotalRMI.png}
-\caption{Mostra o tempo médio e o intervalo de confiança de 95\% para as sete operações, na mesma ordem em que foram descritas. Tempo calculado no cliente, desde a abertura até o fechamento da conexão usando RMI.}
-\label{fig:total}
+\caption{Mostra o tempo médio e o intervalo de confiança de 95\% para as sete operações, na mesma ordem em que foram descritas, utilizando-se o protocolo RMI. Tempo calculado no cliente, entre a execução da {\it task}.}
+\label{fig:totalR}
 \end{figure}
-
-Os resultados que obtivemos para o tempo total de conexão dependem bastante das consultas ao banco de dados e do tamanho das mensagens. Esses mensagens nas operações pequenas, como já especificado, podem ser totalmente enviadas em apenas um pacote, enquanto nas operações grandes, vários pacotes são necessários para o envio completo das mensagens. Nas operações de escrita, apesar de só um pacote ser necessário para o envio da mensagem, a consulta ao banco de dados para alteração requer um tempo de conexão bem maior do que as consultas de informação. É interessante notar que o desvio da operação de escrita também é consideravelmente maior do que o das outras operações; acreditamos porém que essa variação é causada pelo atraso do banco de dados, e não apenas da rede.
-
-Com isso em mente, os resultados foram como esperado. As operações pequenas estão todas na mesma faixa e a operação grande está apenas um pouco acima destas, visto que a única diferença entre essas duas categorias é a quantidade de pacotes recebidos, que causou um pequeno aumento no tempo medido. Já a operação de escrita apresenta uma grande diferença em relação as demais; o acesso ao banco para alteração de valores gera um {\it overhead} muito grande nesse medida, que acaba representando bem mais o tempo de alteração do banco de dados do que o tempo de conexão com o servidor.
-
-\subsection{Tempo de Transmissão}
-
-Em seguida geramos um gráfico com o tempo total de transmissão das mensagens para cada uma das operações, como explicitado pela equação~\ref{eqn:time}. O resultado segue na Tabela~\ref{table:transmissao} e Figura~\ref{fig:transmissao}.
-
-Os tempos de transmissão medem o tempo de comunicação entre o cliente e o servidor. Esse tempo deve depender apenas do tamanho das mensagens, que como já especificado, corresponde apenas a um pacote nas operações pequenas e de escrita e de vários pacotes nas operações grandes. 
-
-Os tempo obtidos para as operações pequenas e grandes condizem com essa expectativa; o tempo de transmissão da operação grande é levemente maior que o das pequenas. O tempo de transmissão da operação de escrita, porém, fica muito acima do esperado. Assumimos este ser um erro de medida: dado que isto é uma aproximação, o tempo total pode ter influenciado um atraso maior no tempo de transmissão.
 
 \begin{table}[h]
 \centering
-\caption{Mostra o tempo médio e intervalo de confiança de 95\% para transmissão de mensagens segundo a equação~\ref{eqn:time} para cada uma das operações, na ordem em que foram descritas usando RMI.}
-\label{table:transmissao}
+\caption{Tabela mostrando o tempo médio e intervalo de confiança para cada uma das sete operações, na ordem em que foram descritas, para o protocolo TCP. Tempo calculado no cliente, desde a abertura até o fechamento da conexão.}
+\label{table:totalT}
 \begin{tabular}{lll}
-Operação & Tempo Médio de Transmissão (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second}) \\ \hline
-1        & 1.544082             & 0.7207669      \\
-2        & 4.410626             & 23.1782371     \\
-3        & 1.465263             & 0.8149761      \\
-4        & 1.666445             & 1.0031879      \\
-5        & 2.141733             & 1.8006986       \\
-6        & 7.834579             & 63.1107935     \\
-7        & 1.509789             & 1.3315485     
+Operação & Tempo Médio Total (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second})\\ \hline
+1        & 38.42           & 5.59   \\
+2        & 37.38           & 9.14   \\
+3        & 37.47           & 7.59   \\
+4        & 37.10           & 10.37  \\
+5        & 40.41           & 9.15   \\
+6        & 114.10          & 95.27  \\
+7        & 36.49           & 7.88  
 \end{tabular}
 \end{table}
 
 \begin{figure}[h]
 \centering
+\includegraphics[width=\textwidth]{resultadosTempoTotalTCP.png}
+\caption{Mostra o tempo médio e o intervalo de confiança de 95\% para as sete operações, na mesma ordem em que foram descritas, para o protocolo TCP. Tempo calculado no cliente, desde a abertura até o fechamento da conexão.}
+\label{fig:totalT}
+\end{figure}
+
+Os resultados que obtivemos para o tempo total de conexão dependem bastante das consultas ao banco de dados e do tamanho das mensagens. Essas mensagens nas operações pequenas, como já especificado, podem ser totalmente enviadas em apenas um pacote, enquanto nas operações grandes, vários pacotes são necessários para o envio completo das mensagens. Nas operações de escrita, apesar de só um pacote ser necessário para o envio da mensagem, a consulta ao banco de dados para alteração requer um tempo bem maior de operação.
+
+Com isso em mente, os resultados foram neste sentido como esperado. Observe que tanto no TCP quanto no RMI as operações de escrita notoriamente tomam mais tempo que as outras. É notável também que as operações grandes levam um pouco mais de tempo que as pequenas - mas ainda têm tempos bem inferiores às de escrita.
+
+O fato a se notar, entretanto, é a escala vertical dos gráficos: embora eles sejam parecidos, em todas as operações o TCP tomou mais tempo que o RMI. Em todos os experimentos realizados, essa afirmação mostrou-se verdadeira, com o tempo de comunicação via RMI sendo cerca de 2 vezes menor que via TCP. 
+
+Entretando, era esperado que o RMI fosse mais lento que o TCP puro, uma vez que ele roda em cima do TCP (e de HTTP), escondendo sua complexidade. Acreditamos que este fato tenha ocorrido por causa das diferenças nas linguagens utilizadas nos dois projetos. Enquanto o RMI é implementado em Java, que possui um ótimo suporte para JDBC, o TCP foi implementado na linguagem C, sem o mínimo de suporte à Banco de Dados, e portanto, acreditamos que o acesso ao banco foi um gargalo bem maior no projeto com o TCP.
+
+\subsection{Tempo de Transmissão}
+
+Em seguida geramos um gráfico com o tempo total de transmissão das mensagens para cada uma das operações, como explicitado pela equação~\ref{eqn:time}. O resultado para o RMI segue na Tabela~\ref{table:transmissaoR} e Figura~\ref{fig:transmissaoR}. Na Tabela~\ref{table:transmissao} e Figura~\ref{fig:transmissao} temos os resultados para os mesmos experimentos utilizando o protocolo TCP.
+
+\begin{table}[h]
+\centering
+\caption{Mostra o tempo médio e intervalo de confiança de 95\% para transmissão de mensagens segundo a equação~\ref{eqn:time} para cada uma das operações, na ordem em que foram descritas, utilizando o protocolo RMI.}
+\label{table:transmissaoR}
+\begin{tabular}{lll}
+Operação & Tempo Médio de Transmissão (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second}) \\ \hline
+1 & 1.544082 & 0.7207669  \\
+2 & 4.410626 & 23.1782371 \\
+3 & 1.465263 & 0.8149761  \\
+4 & 1.666445 & 1.0031879  \\
+5 & 2.141733 & 1.8006986  \\
+6 & 7.834579 & 63.1107935 \\
+7 & 1.509789 & 1.3315485 
+\end{tabular}
+\end{table}
+
+Os tempos de transmissão medem o tempo de comunicação entre o cliente e o servidor. Esse tempo deve depender apenas do tamanho das mensagens, que como já especificado, corresponde apenas a um pacote nas operações pequenas e de escrita e de vários pacotes nas operações grandes. 
+
+Os tempo obtidos para as operações pequenas e grandes condizem com essa expectativa, tanto no TCP quanto no RMI; no TCP as operações de escrita em alguns experimentos tiveram tempos de transmissão muito maiores (observe o alto desvio): acreditamos que isso se deva às aproximações no cálculo do tempo de transmissão. Para o RMI também podemos observar que as operações de escrita estão acima das demais, um resultado condizente, uma vez que ele roda em cima do TCP; operações grandes precisaram de um intervalo de tempo um pouco maior para serem transmitidas.
+
+Note que, diferente do esperado, os tempos de transmissão das mensagens RMI foram muito inferiores aos tempos do TCP;  enquanto uma operação grande demorou cerca de $\SI{10}{\milli\second}$, em média, para ser transmitida no TCP, no RMI levou apenas $\SI{2}{\milli\second}$, em média. Como comentado na seção anterior, atribuímos esse resultado as diferentes linguagens utilizadas.
+
+\begin{figure}[h]
+\centering
 \includegraphics[width=\textwidth]{resultadosTempoTransmissaoRMI.png}
-\caption{Tempo médio, com intervalo de confiança de 95\%, calculado conforme a equação~\ref{eqn:time}, para as sete operações na mesma ordem em que foram descritas, usando RMI.}
+\caption{Tempo médio, com intervalo de confiança de 95\%, calculado conforme a equação~\ref{eqn:time}, para as sete operações na mesma ordem em que foram descritas, utilizando o protocolo RMI.}
+\label{fig:transmissaoR}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\caption{Mostra o tempo médio e intervalo de confiança de 95\% para transmissão de mensagens segundo a equação~\ref{eqn:time} para cada uma das operações, na ordem em que foram descritas, utilizando o protocolo TCP.}
+\label{table:transmissao}
+\begin{tabular}{lll}
+Operação & Tempo Médio de Transmissão (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second}) \\ \hline
+1        & 11.02                & 2.86   \\
+2        & 10.35                & 4.09   \\
+3        & 10.79                & 3.30   \\
+4        & 10.43                & 4.61   \\
+5        & 11.99                & 4.45   \\
+6        & 24.19                & 48.88  \\
+7        & 10.37                & 3.66  
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{resultadosTempoTransmissaoTCP.png}
+\caption{Tempo médio, com intervalo de confiança de 95\%, calculado conforme a equação~\ref{eqn:time}, para as sete operações na mesma ordem em que foram descritas, utilizando o protocolo TCP.}
 \label{fig:transmissao}
 \end{figure}
 
 \subsection{Tamanho de Código}
+
 As operações de redes são, na verdade, parte pequena do código total da aplicação. No servidor, a parte mais extensa do código são claramente as operações de consulta {\it MySQL}. No cliente, além das operações de banco de dados, há dezenas de linhas voltadas apenas para a saída na tela dos {\it prompts} ou a escrita em arquivo.
 
 As operações de redes, mesmo no servidor que faz algumas operações a mais que o cliente, representam muito pouco do código. Considerando-se o servidor, as operações de redes mais os seus testes de erros somam 51 linhas, enquanto o arquivo todo tem 191 (correspondem a cerca de 26\%). Para o cliente, as operações de redes representam 31 de um total de 342 linhas (cerca de 9\%). 
 
 \subsection{Confiabilidade}
 
-Como o protocolo escolhido foi o TCP, que garante confiabilidade na transmissão de mensagens, a confiabilidade esperada era de 100\%. De fato, todas as consultas feitas foram exatamente iguais às geradas localmente para contra-prova, comprovando experimentalmente a confiabilidade do protocolo.
+Como o protocolo escolhido foi o RMI o qual roda em cima do protocolo TCP, que garante confiabilidade na transmissão de mensagens, fato já comprovado experimentalmente em uma trabalho anterior, podemos afirmar que para esse protocolo a confiabilidade também é de 100\%. 
 
 \subsection{Nível de Abstração}
 

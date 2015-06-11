@@ -3,17 +3,11 @@
 \contentsline {section}{\numberline {2}Descri\IeC {\c c}\IeC {\~a}o Geral do Sistema}{2}
 \contentsline {section}{\numberline {3}Armazenamento e Estruturas de Dados}{4}
 \contentsline {section}{\numberline {4}Detalhes de Implementa\IeC {\c c}\IeC {\~a}o}{4}
-\contentsline {section}{\numberline {5}An\IeC {\'a}lise dos Resultados}{6}
+\contentsline {section}{\numberline {5}An\IeC {\'a}lise dos Resultados}{5}
 \contentsline {subsection}{\numberline {5.1}Tempo total de Comunica\IeC {\c c}\IeC {\~a}o}{6}
-\contentsline {subsection}{\numberline {5.2}Tempo de Transmiss\IeC {\~a}o}{7}
-\contentsline {subsection}{\numberline {5.3}Tamanho de C\IeC {\'o}digo}{8}
-\contentsline {subsection}{\numberline {5.4}Confiabilidade}{8}
-<<<<<<< HEAD
-\contentsline {subsection}{\numberline {5.5}N\IeC {\'\i }vel de Abstra\IeC {\c c}\IeC {\~a}o}{9}
-\contentsline {section}{\numberline {6}Conclus\IeC {\~o}es}{9}
-\contentsline {section}{\numberline {}Refer\IeC {\^e}ncias}{10}
-=======
-\contentsline {subsection}{\numberline {5.5}N\IeC {\'\i }vel de Abstra\IeC {\c c}\IeC {\~a}o}{8}
-\contentsline {section}{\numberline {6}Conclus\IeC {\~o}es}{8}
-\contentsline {section}{\numberline {}Refer\IeC {\^e}ncias}{8}
->>>>>>> a78699bb2c330b8222a4c7e742ef2ba356002c2a
+\contentsline {subsection}{\numberline {5.2}Tempo de Transmiss\IeC {\~a}o}{8}
+\contentsline {subsection}{\numberline {5.3}Tamanho de C\IeC {\'o}digo}{9}
+\contentsline {subsection}{\numberline {5.4}Confiabilidade}{10}
+\contentsline {subsection}{\numberline {5.5}N\IeC {\'\i }vel de Abstra\IeC {\c c}\IeC {\~a}o}{10}
+\contentsline {section}{\numberline {6}Conclus\IeC {\~o}es}{11}
+\contentsline {section}{\numberline {}Refer\IeC {\^e}ncias}{11}
