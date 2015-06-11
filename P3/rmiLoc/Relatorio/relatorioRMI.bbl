@@ -1,0 +1,27 @@
+\begin{thebibliography}{1}
+
+\bibitem{downing1998java}
+Troy~Bryan Downing.
+\newblock {\em Java RMI: remote method invocation}.
+\newblock IDG Books Worldwide, Inc., 1998.
+
+\bibitem{RMITutorial}
+The~Java Tutorials.
+\newblock Trail: Rmi., 2015.
+
+\bibitem{postel1981transmission}
+Jon Postel.
+\newblock Transmission control protocol.
+\newblock 1981.
+
+\bibitem{mysql1995mysql}
+AB~MySQL.
+\newblock {\em MySQL: the world's most popular open source database}.
+\newblock MySQL AB, 1995.
+
+\bibitem{IMDbsite}
+Internet~Movie Database.
+\newblock Top 250 on imdb: Highest-rated movies based on votes by imdb users.,
+  2015.
+
+\end{thebibliography}

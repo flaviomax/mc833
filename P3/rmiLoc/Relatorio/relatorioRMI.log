@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.22)  10 JUN 2015 20:26
+=======
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.8.9)  10 JUN 2015 20:31
+>>>>>>> a78699bb2c330b8222a4c7e742ef2ba356002c2a
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1302,15 +1306,17 @@ File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
  [1
 
-]
+] [2
 
-LaTeX Warning: Citation `postel1981transmission' on page 2 undefined on input l
-ine 111.
+] [3] [4] [5]
 
-
-LaTeX Warning: Citation `postel1980user' on page 2 undefined on input line 111.
+LaTeX Warning: Reference `fig:total' on page 6 undefined on input line 180.
 
 
+LaTeX Warning: Reference `fig:transmissao' on page 6 undefined on input line 21
+1.
+
+<<<<<<< HEAD
 [2
 
 ]
@@ -1356,15 +1362,25 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [8] [9 <./resultadosTempoTransmissaoRMI.png (PNG copy)>]
 No file relatorioRMI.bbl.
 [10] (./relatorioRMI.aux)
+=======
+[6] [7] (./relatorioRMI.bbl [8]) [9] (./relatorioRMI.aux)
+>>>>>>> a78699bb2c330b8222a4c7e742ef2ba356002c2a
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
+<<<<<<< HEAD
  13177 strings out of 494963
  257926 string characters out of 6179647
  280372 words of memory out of 5000000
  16098 multiletter control sequences out of 15000+600000
+=======
+ 13168 strings out of 494963
+ 257620 string characters out of 6179648
+ 280371 words of memory out of 5000000
+ 16090 multiletter control sequences out of 15000+600000
+>>>>>>> a78699bb2c330b8222a4c7e742ef2ba356002c2a
  64422 words of font info for 61 fonts, out of 8000000 for 9000
  42 hyphenation exceptions out of 8191
  39i,11n,45p,10404b,950s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1376,7 +1392,11 @@ m/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/te
 xmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr
 12.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fon
 ts/type1/public/lm/lmri12.pfb>
+<<<<<<< HEAD
 Output written on relatorioRMI.pdf (11 pages, 247442 bytes).
+=======
+Output written on relatorioRMI.pdf (10 pages, 190512 bytes).
+>>>>>>> a78699bb2c330b8222a4c7e742ef2ba356002c2a
 PDF statistics:
  80 PDF objects out of 1000 (max. 8388607)
  55 compressed objects within 1 object stream
