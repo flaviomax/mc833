@@ -148,7 +148,7 @@ Em um sistema real de cliente-servidor os dados são em sua maioria armazenados 
     
     No acesso ao banco de dados, os clientes podem apenas acessar a informação, enquanto o cliente administrador da locadora pode, além do acesso, alterar a quantidade de exemplares em estoque. Para garantir esse privilégio de acesso, é necessário uma senha para entrar no modo administrador, a qual é processada pelo programa e só após confirmada o acesso diferenciado ao banco pode ocorrer.
     
-Com o objetivo de fazer um sistema robusto, que garante a confiabilidade do mesmo, optamos por utilizar uma cópia do banco de dados do servidor no lado do Cliente, possibilitando assim uma conferência dos dados retornados pelas consultas. Apesar de ser uma manobra simulada, nos permite confirmar a confiabilidade do protocolo TCP, que para todos os nossos exemplos retornou as consultas em ordem, da forma que foram enviadas pelo servidor. E portanto, essa manobra também nos permitirá dizer se o mesmo ocorre quando utilizamos um protocolo sem confiabilidade, que é o caso do UDP.
+Como o RMI utiliza por baixo o protocolo TCP na comunicação Cliente-Servidor não fizemos nenhuma manobra para comprovar sua confiabilidade, umas vez que já comprovamos a confiabilidade do protocolo TCP em um trabalho passado e portanto podemos afirmá-la para o RMI.
 
 \section{Detalhes de Implementação}
 
@@ -186,26 +186,26 @@ Primeiramente geramos um gráfico com o tempo total de conexão com o servidor p
 
 \begin{table}[h]
 \centering
-\caption{Tabela mostrando o tempo médio e intervalo de confiança para cada uma das sete operações, na ordem em que foram descritas. Tempo calculado no cliente, desde a abertura até o fechamento da conexão.}
+\caption{Tabela mostrando o tempo médio e intervalo de confiança para cada uma das sete operações, na ordem em que foram descritas. Tempo calculado no cliente, desde a abertura até o fechamento da conexão usando RMI.}
 \label{table:total}
 \begin{tabular}{lll}
-Operação & Tempo Médio Total (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second})\\ \hline
-1        & 38.42           & 5.59   \\
-2        & 37.38           & 9.14   \\
-3        & 37.47           & 7.59   \\
-4        & 37.10           & 10.37  \\
-5        & 40.41           & 9.15   \\
-6        & 114.10          & 95.27  \\
-7        & 36.49           & 7.88  
+Operação & Tempo Total de Comunicação (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second}) \\ \hline
+1        & 14.66019          & 5.715058      \\
+2        & 19.90590          & 47.649582  	 \\
+3        & 12.63895          & 7.884285  	 \\
+4        & 13.66040          & 4.993054   	 \\
+5        & 18.04669          & 7.716191   	  \\
+6        & 72.64021          & 127.971248 	 \\
+7        & 13.09539          & 7.597693   	
 \end{tabular}
 \end{table}
 
-%\begin{figure}[h]
-%\centering
-%\includegraphics[width=\textwidth]{diagrama/resultadosTempoTotal.png}
-%\caption{Mostra o tempo médio e o intervalo de confiança de 95\% para as sete operações, na mesma ordem em que foram descritas. Tempo calculado no cliente, desde a abertura até o fechamento da conexão.}
-%\label{fig:total}
-%\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{resultadosTempoTotalRMI.png}
+\caption{Mostra o tempo médio e o intervalo de confiança de 95\% para as sete operações, na mesma ordem em que foram descritas. Tempo calculado no cliente, desde a abertura até o fechamento da conexão usando RMI.}
+\label{fig:total}
+\end{figure}
 
 Os resultados que obtivemos para o tempo total de conexão dependem bastante das consultas ao banco de dados e do tamanho das mensagens. Esses mensagens nas operações pequenas, como já especificado, podem ser totalmente enviadas em apenas um pacote, enquanto nas operações grandes, vários pacotes são necessários para o envio completo das mensagens. Nas operações de escrita, apesar de só um pacote ser necessário para o envio da mensagem, a consulta ao banco de dados para alteração requer um tempo de conexão bem maior do que as consultas de informação. É interessante notar que o desvio da operação de escrita também é consideravelmente maior do que o das outras operações; acreditamos porém que essa variação é causada pelo atraso do banco de dados, e não apenas da rede.
 
@@ -221,26 +221,26 @@ Os tempo obtidos para as operações pequenas e grandes condizem com essa expect
 
 \begin{table}[h]
 \centering
-\caption{Mostra o tempo médio e intervalo de confiança de 95\% para transmissão de mensagens segundo a equação~\ref{eqn:time} para cada uma das operações, na ordem em que foram descritas.}
+\caption{Mostra o tempo médio e intervalo de confiança de 95\% para transmissão de mensagens segundo a equação~\ref{eqn:time} para cada uma das operações, na ordem em que foram descritas usando RMI.}
 \label{table:transmissao}
 \begin{tabular}{lll}
 Operação & Tempo Médio de Transmissão (\SI{}{\milli\second}) & Intervalo de Confiança (\SI{}{\milli\second}) \\ \hline
-1        & 11.02                & 2.86   \\
-2        & 10.35                & 4.09   \\
-3        & 10.79                & 3.30   \\
-4        & 10.43                & 4.61   \\
-5        & 11.99                & 4.45   \\
-6        & 24.19                & 48.88  \\
-7        & 10.37                & 3.66  
+1        & 1.544082             & 0.7207669      \\
+2        & 4.410626             & 23.1782371     \\
+3        & 1.465263             & 0.8149761      \\
+4        & 1.666445             & 1.0031879      \\
+5        & 2.141733             & 1.8006986       \\
+6        & 7.834579             & 63.1107935     \\
+7        & 1.509789             & 1.3315485     
 \end{tabular}
 \end{table}
 
-%\begin{figure}[h]
-%\centering
-%\includegraphics[width=\textwidth]{diagrama/resultadosTempoTransmissao.png}
-%\caption{Tempo médio, com intervalo de confiança de 95\%, calculado conforme a equação~\ref{eqn:time}, para as sete operações na mesma ordem em que foram descritas.}
-%\label{fig:transmissao}
-%\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{resultadosTempoTransmissaoRMI.png}
+\caption{Tempo médio, com intervalo de confiança de 95\%, calculado conforme a equação~\ref{eqn:time}, para as sete operações na mesma ordem em que foram descritas, usando RMI.}
+\label{fig:transmissao}
+\end{figure}
 
 \subsection{Tamanho de Código}
 As operações de redes são, na verdade, parte pequena do código total da aplicação. No servidor, a parte mais extensa do código são claramente as operações de consulta {\it MySQL}. No cliente, além das operações de banco de dados, há dezenas de linhas voltadas apenas para a saída na tela dos {\it prompts} ou a escrita em arquivo.

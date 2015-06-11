@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.8.9)  10 JUN 2015 19:42
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.22)  10 JUN 2015 20:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1331,22 +1331,40 @@ LaTeX Warning: Citation `hall19beej' on page 4 undefined on input line 161.
 
 LaTeX Warning: Citation `hall19beej' on page 4 undefined on input line 161.
 
-[4] [5] [6]
+[4] [5] <resultadosTempoTotalRMI.png, id=30, 963.6pt x 642.4pt>
+File: resultadosTempoTotalRMI.png Graphic file (type png)
+
+<use resultadosTempoTotalRMI.png>
+Package pdftex.def Info: resultadosTempoTotalRMI.png used on input line 205.
+(pdftex.def)             Requested size: 455.24411pt x 303.4964pt.
+
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[7] [8]
+[6] [7 <./resultadosTempoTotalRMI.png (PNG copy)>]
+<resultadosTempoTransmissaoRMI.png, id=38, 963.6pt x 642.4pt>
+File: resultadosTempoTransmissaoRMI.png Graphic file (type png)
+
+<use resultadosTempoTransmissaoRMI.png>
+Package pdftex.def Info: resultadosTempoTransmissaoRMI.png used on input line 2
+40.
+(pdftex.def)             Requested size: 455.24411pt x 303.4964pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[8] [9 <./resultadosTempoTransmissaoRMI.png (PNG copy)>]
 No file relatorioRMI.bbl.
-[9] (./relatorioRMI.aux)
+[10] (./relatorioRMI.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 13166 strings out of 494963
- 257584 string characters out of 6179648
- 280374 words of memory out of 5000000
- 16090 multiletter control sequences out of 15000+600000
+ 13177 strings out of 494963
+ 257926 string characters out of 6179647
+ 280372 words of memory out of 5000000
+ 16098 multiletter control sequences out of 15000+600000
  64422 words of font info for 61 fonts, out of 8000000 for 9000
  42 hyphenation exceptions out of 8191
  39i,11n,45p,10404b,950s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1358,10 +1376,10 @@ m/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/te
 xmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr
 12.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fon
 ts/type1/public/lm/lmri12.pfb>
-Output written on relatorioRMI.pdf (10 pages, 188982 bytes).
+Output written on relatorioRMI.pdf (11 pages, 247442 bytes).
 PDF statistics:
- 75 PDF objects out of 1000 (max. 8388607)
- 53 compressed objects within 1 object stream
+ 80 PDF objects out of 1000 (max. 8388607)
+ 55 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

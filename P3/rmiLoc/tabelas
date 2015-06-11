@@ -1,0 +1,17 @@
+Operação  Tempo Médio Total     desvio            tipo
+1        14.66019   5.715058  OperacaoPequena
+2        19.90590   47.649582  OperacaoPequena
+3        12.63895   7.884285  OperacaoPequena
+4        13.66040   4.993054  OperacaoPequena
+5        18.04669   7.716191  OperacaoGrande
+6        72.64021   127.971248  OperacaoEscrita
+7        13.09539   7.597693  OperacaoPequena
+
+Operação  Tempo de Transmissão     Desvio Padrão    Tipo
+1         1.544082  0.7207669  Operação Pequena
+2         4.410626  23.1782371  Operação Pequena
+3         1.465263  0.8149761  Operação Pequena
+4         1.666445  1.0031879  Operação Pequena
+5         2.141733  1.8006986  Operação Grande
+6         7.834579  63.1107935  Operação Escrita
+7         1.509789  1.3315485  Operação Pequena
